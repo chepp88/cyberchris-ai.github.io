@@ -11,179 +11,231 @@
 
     <style>
         :root { --neon-cyan: #00ffff; --neon-magenta: #ff00ff; }
-        body { background: #000810; color: white; }
+        body { background: #000810; color: white; margin: 0; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+
+        /* Neon Status Bar */
+        #telemetry-bar {
+            background: rgba(0, 20, 40, 0.9);
+            border-bottom: 1px solid var(--neon-cyan);
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 1px;
+            z-index: 100;
+        }
+
+        .heartbeat { animation: blink 1.5s infinite; color: #00ff00; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
         /* Dashboard Layout */
         .dashboard-container {
             display: grid;
             grid-template-columns: 280px 1fr;
-            gap: 20px;
-            padding: 20px;
+            gap: 25px;
+            padding: 25px;
             max-width: 1600px;
             margin: 0 auto;
         }
 
-        /* Glass Cards */
         .glass-card {
-            background: rgba(10, 20, 40, 0.7);
-            backdrop-filter: blur(10px);
+            background: rgba(5, 15, 30, 0.8);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(0, 255, 255, 0.1);
-            border-radius: 8px;
-            transition: 0.3s;
+            border-radius: 4px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .glass-card:hover { border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 255, 255, 0.1); }
+        .glass-card:hover { border-color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0, 255, 255, 0.15); }
 
-        /* Hub Hero Section */
-        .hub-hero {
-            grid-column: 1 / -1;
-            margin-bottom: 20px;
-        }
+        /* Hero Hub */
+        .hub-hero { grid-column: 1 / -1; }
+        .matrix-link { transition: 0.2s; text-decoration: none !important; }
+        .matrix-link:hover { background: rgba(0, 255, 255, 0.1); transform: translateY(-2px); border-color: var(--neon-cyan); }
 
-        .matrix-link { text-decoration: none !important; }
-        .matrix-link:hover { background: rgba(0, 255, 255, 0.1); transform: translateY(-2px); }
+        /* App Grid Styling */
+        .apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .app-item { padding: 25px; text-decoration: none !important; display: block; }
+        .app-item h3 { font-family: 'Orbitron', sans-serif; color: white; margin-bottom: 8px; }
+        .app-item p { color: #888; font-size: 13px; margin: 0; line-height: 1.5; }
 
-        /* Sidebar Styling */
-        .sidebar-hud {
-            padding: 20px;
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-        }
-
-        /* Hide standard style.css grid to use our new one */
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
-        
-        /* Interactive Elements */
-        .cta-button { border: 1px solid var(--neon-cyan); color: var(--neon-cyan); background: transparent; padding: 10px 20px; cursor: pointer; font-family: 'Share Tech Mono'; }
-        .cta-button:hover { background: var(--neon-cyan); color: black; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #000810; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-cyan); }
     </style>
 </head>
 <body>
 
-    <header class="p-4 border-b border-cyan-900/50 bg-black/40 backdrop-blur-md">
+    <div id="telemetry-bar">
+        <div>
+            <span class="heartbeat">●</span> SYSTEM_CORE: ONLINE 
+            <span class="ml-4 text-cyan-500">LOC: SUMMERSIDE, OH</span>
+        </div>
+        <div class="text-cyan-400">
+            NETWORK_STRENGTH: 98.4% &bull; <span id="clock">00:00:00</span>
+        </div>
+    </div>
+
+    <header class="p-6 border-b border-cyan-900/30 bg-black/20 backdrop-blur-md">
         <nav class="flex justify-between items-center max-w-7xl mx-auto">
-            <a href="index.html" class="font-['Orbitron'] text-xl text-white no-underline">CyberSolutions<span class="text-cyan-400">Ohio</span></a>
-            <ul class="flex gap-6 list-none m-0 p-0 text-[12px] uppercase tracking-widest font-['Rajdhani']">
-                <li><a href="index.html" class="text-gray-400 hover:text-cyan-400 no-underline">Home</a></li>
-                <li><a href="apps.html" class="text-cyan-400 no-underline">Apps</a></li>
-                <li><a href="arcade.html" class="text-gray-400 hover:text-cyan-400 no-underline">Arcade</a></li>
-                <li><a href="contact.html" class="text-gray-400 hover:text-cyan-400 no-underline">Contact</a></li>
+            <a href="index.html" class="font-['Orbitron'] text-2xl font-black text-white no-underline tracking-tighter">
+                CYBER<span class="text-cyan-400">SOLUTIONS</span>
+            </a>
+            <ul class="flex gap-8 list-none m-0 p-0 text-[11px] uppercase tracking-[3px] font-['Share_Tech_Mono']">
+                <li><a href="index.html" class="text-gray-400 hover:text-cyan-400 transition-colors no-underline">Home</a></li>
+                <li><a href="apps.html" class="text-cyan-400 no-underline border-b border-cyan-400 pb-1">Apps</a></li>
+                <li><a href="arcade.html" class="text-gray-400 hover:text-cyan-400 transition-colors no-underline">Arcade</a></li>
+                <li><a href="contact.html" class="text-gray-400 hover:text-cyan-400 transition-colors no-underline">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <div class="dashboard-container">
         
-        <div class="hub-hero glass-card p-6 border-l-4 border-l-cyan-500 relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-4 opacity-20 font-['Share_Tech_Mono'] text-[60px] pointer-events-none">0xFF</div>
-            
-            <div class="flex flex-col md:flex-row justify-between items-end gap-6 relative z-10">
-                <div class="w-full md:w-1/3">
-                    <h2 class="font-['Orbitron'] text-3xl font-black mb-1">MATRIX_HUB</h2>
-                    <p class="font-['Share_Tech_Mono'] text-cyan-400 text-xs tracking-[4px] uppercase mb-4">Core Operational Interface</p>
-                    <div id="fact-box" class="text-[11px] text-gray-400 italic bg-black/30 p-3 border-l border-yellow-500">
-                        <span id="useless-fact">Initializing systems...</span>
+        <div class="hub-hero glass-card p-8 border-l-4 border-l-cyan-500 relative overflow-hidden mb-4">
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-8 relative z-10">
+                <div class="w-full lg:w-1/4">
+                    <h2 class="font-['Orbitron'] text-4xl font-black mb-1">MATRIX_HUB</h2>
+                    <p class="font-['Share_Tech_Mono'] text-fuchsia-500 text-[10px] tracking-[5px] uppercase mb-6">Central Operations Console</p>
+                    <div class="bg-black/40 p-4 border-l-2 border-yellow-500 font-['Share_Tech_Mono'] text-[11px] leading-relaxed text-gray-400">
+                        <span class="text-yellow-500 font-bold block mb-1">DATA_STREAM:</span>
+                        <span id="useless-fact">SYNCHRONIZING...</span>
                     </div>
                 </div>
 
-                <div class="w-full md:w-2/3 grid grid-cols-2 lg:grid-cols-4 gap-2">
-                    <a href="billiards.html" class="matrix-link p-2 bg-cyan-500/5 border border-cyan-500/20 rounded text-center">
-                        <div class="text-[9px] text-cyan-500 font-mono">01_PHYSICS</div>
-                        <div class="text-[10px] text-white font-bold">READY</div>
+                <div class="w-full lg:w-3/4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <a href="billiards.html" class="matrix-link p-3 bg-cyan-500/5 border border-cyan-500/20 rounded flex flex-col justify-center">
+                        <span class="text-[9px] text-cyan-500 font-mono mb-1">01_PHYSICS</span>
+                        <span class="text-[11px] text-white font-bold font-['Orbitron']">BILLIARDS</span>
                     </a>
-                    <a href="zengarden.html" class="matrix-link p-2 bg-cyan-500/5 border border-cyan-500/20 rounded text-center">
-                        <div class="text-[9px] text-cyan-500 font-mono">02_ZEN</div>
-                        <div class="text-[10px] text-white font-bold">ACTIVE</div>
+                    <a href="zengarden.html" class="matrix-link p-3 bg-cyan-500/5 border border-cyan-500/20 rounded">
+                        <span class="text-[9px] text-cyan-500 font-mono mb-1">02_ZEN</span>
+                        <span class="text-[11px] text-white font-bold font-['Orbitron']">GARDEN</span>
                     </a>
-                    <a href="dna.html" class="matrix-link p-2 bg-cyan-500/5 border border-cyan-500/20 rounded text-center">
-                        <div class="text-[9px] text-cyan-500 font-mono">03_GENOME</div>
-                        <div class="text-[10px] text-white font-bold">SYNCED</div>
+                    <a href="dna.html" class="matrix-link p-3 bg-cyan-500/5 border border-cyan-500/20 rounded">
+                        <span class="text-[9px] text-cyan-500 font-mono mb-1">03_GENOME</span>
+                        <span class="text-[11px] text-white font-bold font-['Orbitron']">DNA_VIS</span>
                     </a>
-                    <a href="solar.html" class="matrix-link p-2 bg-cyan-500/5 border border-cyan-500/20 rounded text-center">
-                        <div class="text-[9px] text-cyan-500 font-mono">04_ORRERY</div>
-                        <div class="text-[10px] text-white font-bold">TRACKING</div>
+                    <a href="solar.html" class="matrix-link p-3 bg-cyan-500/5 border border-cyan-500/20 rounded">
+                        <span class="text-[9px] text-cyan-500 font-mono mb-1">04_ORRERY</span>
+                        <span class="text-[11px] text-white font-bold font-['Orbitron']">SOLAR_SYS</span>
                     </a>
-                    <a href="3d-asteroid-field.html" class="matrix-link p-2 bg-cyan-500/5 border border-cyan-500/20 rounded text-center">
-                        <div class="text-[9px] text-cyan-500 font-mono">05_DEFENSE</div>
-                        <div class="text-[10px] text-yellow-500">ARMED</div>
+                    <a href="3d-asteroid-field.html" class="matrix-link p-3 bg-cyan-500/5 border border-cyan-500/20 rounded">
+                        <span class="text-[9px] text-cyan-500 font-mono mb-1">05_DEFENSE</span>
+                        <span class="text-[11px] text-yellow-500 font-bold font-['Orbitron']">ASTEROIDS</span>
                     </a>
-                    <a href="city-builder.html" class="matrix-link p-2 bg-cyan-500/5 border border-cyan-500/20 rounded text-center">
-                        <div class="text-[9px] text-cyan-500 font-mono">06_URBAN</div>
-                        <div class="text-[10px] text-white font-bold">LIVE</div>
+                    <a href="city-builder.html" class="matrix-link p-3 bg-cyan-500/5 border border-cyan-500/20 rounded">
+                        <span class="text-[9px] text-cyan-500 font-mono mb-1">06_URBAN</span>
+                        <span class="text-[11px] text-white font-bold font-['Orbitron']">CITY_BLD</span>
                     </a>
-                    <a href="3d-pong.html" class="matrix-link p-2 bg-cyan-500/5 border border-cyan-500/20 rounded text-center">
-                        <div class="text-[9px] text-cyan-500 font-mono">07_NEURAL</div>
-                        <div class="text-[10px] text-white font-bold">LEGACY</div>
+                    <a href="3d-pong.html" class="matrix-link p-3 bg-cyan-500/5 border border-cyan-500/20 rounded">
+                        <span class="text-[9px] text-cyan-500 font-mono mb-1">07_NEURAL</span>
+                        <span class="text-[11px] text-white font-bold font-['Orbitron']">PONG_3D</span>
                     </a>
-                    <a href="vault.html" class="matrix-link p-2 bg-fuchsia-500/10 border border-fuchsia-500/30 rounded text-center animate-pulse">
-                        <div class="text-[9px] text-fuchsia-400 font-mono">08_VAULT</div>
-                        <div class="text-[10px] text-fuchsia-400 font-bold">ENCRYPTED</div>
+                    <a href="vault.html" class="matrix-link p-3 bg-fuchsia-500/10 border border-fuchsia-500/30 rounded animate-pulse">
+                        <span class="text-[9px] text-fuchsia-400 font-mono mb-1">08_VAULT</span>
+                        <span class="text-[11px] text-fuchsia-400 font-bold font-['Orbitron']">SEC_CORE</span>
                     </a>
                 </div>
             </div>
         </div>
 
-        <aside class="sidebar-hud glass-card font-['Share_Tech_Mono']">
-            <h3 class="text-cyan-500 text-sm mb-4 border-b border-cyan-900 pb-2">DIAGNOSTICS</h3>
-            <div class="mb-6">
-                <input type="text" id="search-bar" placeholder="SEARCH_NODE..." class="w-full bg-black/50 border border-cyan-900 p-2 text-xs text-cyan-400 outline-none">
-            </div>
-            
-            <div class="space-y-4 text-[11px]">
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" id="show-games" checked class="accent-cyan-500"> SHOW_GAMES
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" id="show-utilities" checked class="accent-cyan-500"> SHOW_UTILITIES
-                </label>
-            </div>
+        <aside class="hidden md:block">
+            <div class="sidebar-hud glass-card p-6 sticky top-8 font-['Share_Tech_Mono']">
+                <h3 class="text-cyan-500 text-xs mb-6 tracking-widest uppercase border-b border-cyan-900 pb-2">Diagnostic_Controls</h3>
+                
+                <div class="mb-8">
+                    <label class="text-[10px] text-gray-500 block mb-2 uppercase">Node_Search</label>
+                    <input type="text" id="search-bar" placeholder="TYPE_COMMAND..." class="w-full bg-black/40 border border-cyan-900/50 p-3 text-xs text-cyan-400 outline-none focus:border-cyan-500">
+                </div>
+                
+                <div class="space-y-6 text-[11px]">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" id="show-games" checked class="hidden peer">
+                        <div class="w-4 h-4 border border-cyan-500 peer-checked:bg-cyan-500 transition-all"></div>
+                        <span class="text-gray-400 group-hover:text-cyan-400">FILTER_GAMES</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" id="show-utilities" checked class="hidden peer">
+                        <div class="w-4 h-4 border border-cyan-500 peer-checked:bg-cyan-500 transition-all"></div>
+                        <span class="text-gray-400 group-hover:text-cyan-400">FILTER_UTILITIES</span>
+                    </label>
+                </div>
 
-            <div class="mt-10 pt-6 border-t border-cyan-900/50">
-                <button onclick="getNewFact()" class="w-full text-[10px] bg-cyan-500/10 border border-cyan-500/50 text-cyan-400 py-2 hover:bg-cyan-500 hover:text-black">REFRESH_DATA_STREAM</button>
+                <div class="mt-12 pt-6 border-t border-cyan-900/50">
+                    <button onclick="getNewFact()" class="w-full text-[10px] bg-cyan-500/5 border border-cyan-500/30 text-cyan-400 py-3 hover:bg-cyan-500 hover:text-black transition-all uppercase tracking-widest">
+                        Refresh_Data_Stream
+                    </button>
+                </div>
             </div>
         </aside>
 
         <main>
-            <div class="features-grid" id="apps-grid">
-                <a href="3d-pong.html" class="feature-item glass-card p-6 no-underline block" data-category="game">
-                    <h3 class="font-['Orbitron'] text-lg text-white mb-2">3D Pong</h3>
-                    <p class="text-sm text-gray-400 font-['Rajdhani']">A modern twist on the classic arcade game.</p>
+            <div class="apps-grid" id="apps-grid">
+                <a href="3d-pong.html" class="app-item glass-card" data-category="game">
+                    <h3>3D Pong</h3>
+                    <p>Classic table tennis reimagined in a neon three-dimensional space.</p>
                 </a>
                 
-                <a href="apps/world-clock.html" class="feature-item glass-card p-6 no-underline block" data-category="utility">
-                    <h3 class="font-['Orbitron'] text-lg text-white mb-2">World Clock</h3>
-                    <p class="text-sm text-gray-400 font-['Rajdhani']">An interactive globe displaying the time.</p>
+                <a href="apps/world-clock.html" class="app-item glass-card" data-category="utility">
+                    <h3>World Clock</h3>
+                    <p>Real-time global synchronization via interactive planetary mapping.</p>
                 </a>
 
-                <a href="3d-asteroid-field.html" class="feature-item glass-card p-6 no-underline block" data-category="game">
-                    <h3 class="font-['Orbitron'] text-lg text-white mb-2">Asteroid Field</h3>
-                    <p class="text-sm text-gray-400 font-['Rajdhani']">Dodge and destroy asteroids in space.</p>
+                <a href="3d-asteroid-field.html" class="app-item glass-card" data-category="game">
+                    <h3>Asteroid Field</h3>
+                    <p>Tactical evasion and defense simulation within high-density space debris.</p>
                 </a>
 
-                <a href="city-builder.html" class="feature-item glass-card p-6 no-underline block" data-category="utility">
-                    <h3 class="font-['Orbitron'] text-lg text-white mb-2">City Builder</h3>
-                    <p class="text-sm text-gray-400 font-['Rajdhani']">Create a sprawling neon city block by block.</p>
+                <a href="city-builder.html" class="app-item glass-card" data-category="utility">
+                    <h3>City Builder</h3>
+                    <p>Urban planning architecture for megastructures of the next century.</p>
                 </a>
-                
-                </div>
+
+                <a href="solitaire.html" class="app-item glass-card" data-category="game">
+                    <h3>3D Solitaire</h3>
+                    <p>The timeless card game logic layered into a 3D geometric environment.</p>
+                </a>
+            </div>
         </main>
     </div>
 
-    <footer class="mt-20 p-10 border-t border-cyan-900/30 bg-black/60 text-center">
-        <p class="font-['Share_Tech_Mono'] text-[10px] text-gray-600 uppercase tracking-widest">&copy; 2026 CyberSolutionsOhio &bull; HEPH_CORE_v4.2</p>
+    <footer class="mt-12 p-12 border-t border-cyan-900/20 bg-black/40 text-center">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center opacity-50 font-['Share_Tech_Mono'] text-[10px] tracking-widest uppercase gap-4">
+            <div>&copy; 2026 Chris Heppard / CyberSolutionsOhio</div>
+            <div class="flex gap-6">
+                <a href="#" class="text-white no-underline hover:text-cyan-400">LinkedIn</a>
+                <a href="#" class="text-white no-underline hover:text-cyan-400">GitHub</a>
+                <a href="#" class="text-white no-underline hover:text-cyan-400">Twitter</a>
+            </div>
+            <div>STATUS: STABLE_RELEASE_v4.2</div>
+        </div>
     </footer>
 
-    <script src="js/main.js"></script>
-    <script src="js/filter.js"></script>
     <script>
+        // Real-time Clock
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
+                            now.getMinutes().toString().padStart(2, '0') + ":" + 
+                            now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('clock').innerText = timeStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Data Stream Fact Fetcher
         async function getNewFact() {
             const factText = document.getElementById('useless-fact');
-            factText.innerText = "> FETCHING_DATA...";
+            factText.innerText = "> FETCHING_NODE...";
             try {
                 const response = await fetch('https://uselessfacts.jsph.pl/random.json?language=en');
                 const data = await response.json();
                 factText.innerText = "> " + data.text.toUpperCase();
-            } catch (e) { factText.innerText = "> ERROR: DATA_STREAM_OFFLINE"; }
+            } catch (e) { factText.innerText = "> DATA_STREAM_OFFLINE"; }
         }
         window.onload = getNewFact;
     </script>
