@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Chess | Cyber Matrix</title>
+    <title>3D Chess | Cyber Matrix Playground</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -12,22 +12,20 @@
         :root {
             --neon-cyan: #00f5d4;
             --neon-magenta: #ff00f5;
-            --dark-bg: #050505;
-            --glass-bg: rgba(10, 10, 15, 0.8);
+            --dark-bg: #0a0a0f;
+            --panel-bg: rgba(10, 10, 15, 0.9);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Rajdhani', sans-serif;
-            background-color: var(--dark-bg);
+            background: var(--dark-bg);
             color: #fff;
-            overflow-x: hidden;
-            margin: 0;
+            overflow: hidden; /* Critical for the playground feel */
         }
 
-        .font-orbitron { font-family: 'Orbitron', sans-serif; }
-        .font-mono { font-family: 'Share Tech Mono', monospace; }
-
-        /* Match Index.html Grid */
+        /* Animated Grid from Index */
         .grid-bg {
             position: fixed;
             top: 0;
@@ -35,156 +33,194 @@
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(rgba(0, 245, 212, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 245, 212, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: -1;
+                linear-gradient(rgba(0, 245, 212, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 245, 212, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
         }
 
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            animation: float 15s infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-10vh); }
+        }
+
+        /* Navigation Styling */
         .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
+            background: var(--panel-bg);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 245, 212, 0.2);
         }
 
         .nav-link {
-            position: relative;
             transition: all 0.3s;
-            white-space: nowrap;
+            text-shadow: 0 0 5px rgba(0, 245, 212, 0);
         }
 
         .nav-link:hover {
             color: var(--neon-cyan);
             text-shadow: 0 0 10px var(--neon-cyan);
+            transform: scale(1.05);
         }
 
         .neon-btn {
             background: linear-gradient(45deg, var(--neon-cyan), var(--neon-magenta));
             color: #000;
-            font-weight: 900;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s;
         }
 
         .neon-btn:hover {
-            box-shadow: 0 0 20px rgba(0, 245, 212, 0.6);
+            box-shadow: 0 0 15px var(--neon-cyan);
             transform: translateY(-2px);
         }
 
+        /* Responsive Layout for 12 links */
+        .nav-container {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 5px;
+        }
+        .nav-container::-webkit-scrollbar { display: none; }
+
         #gameCanvas {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100vh;
-            z-index: 1;
+            height: 100%;
+            z-index: 2;
         }
 
-        .ui-container {
+        .ui-layer {
             position: relative;
             z-index: 10;
             pointer-events: none;
         }
 
-        .ui-container * {
-            pointer-events: auto;
-        }
+        .ui-layer * { pointer-events: auto; }
 
-        /* Scrollbar for many links */
-        .nav-scroll::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
+
     <div class="grid-bg"></div>
+    <div class="particles" id="particles"></div>
 
     <nav class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-cyan-500/30">
-        <div class="max-w-7xl mx-auto px-4 py-4">
-            <div class="flex items-center justify-between gap-4">
-                <a href="index.html" class="font-orbitron text-2xl font-black bg-gradient-to-r from-cyan-400 to-fuchsia-500 bg-clip-text text-transparent flex-shrink-0">
+        <div class="max-w-[1600px] mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="font-orbitron text-2xl font-black bg-gradient-to-r from-cyan-400 to-fuchsia-500 bg-clip-text text-transparent mr-8">
                     CYBER<span class="text-cyan-400">MATRIX</span>
                 </a>
                 
-                <div class="hidden lg:flex items-center gap-4 overflow-x-auto nav-scroll">
-                    <a href="index.html" class="nav-link text-gray-400 font-mono text-xs">[HOME]</a>
-                    <a href="billiards.html" class="nav-link text-gray-400 font-mono text-xs">[COSMIC_BILLIARDS]</a>
-                    <a href="zengarden.html" class="nav-link text-gray-400 font-mono text-xs">[ZEN_GARDEN]</a>
-                    <a href="dna.html" class="nav-link text-gray-400 font-mono text-xs">[DNA]</a>
-                    <a href="solar.html" class="nav-link text-gray-400 font-mono text-xs">[SOLAR_SYSTEM]</a>
-                    <a href="molecule.html" class="nav-link text-gray-400 font-mono text-xs">[MOLECULE]</a>
-                    <a href="physics.html" class="nav-link text-gray-400 font-mono text-xs">[PHYSICS]</a>
-                    <a href="solitaire3d.html" class="nav-link text-gray-400 font-mono text-xs">[SOLITAIRE]</a>
-                    <a href="trippyrun.html" class="nav-link text-gray-400 font-mono text-xs">[TRIPPY_RUN]</a>
-                    <a href="planner.html" class="nav-link text-gray-400 font-mono text-xs">[ROOM_PLANNER]</a>
-                    <a href="converter.html" class="nav-link text-gray-400 font-mono text-xs">[CONVERTER]</a>
-                    <a href="visualizer.html" class="nav-link text-gray-400 font-mono text-xs">[3D_VISUALIZER]</a>
+                <div class="hidden xl:flex items-center gap-4 nav-container font-mono text-[10px]">
+                    <a href="index.html" class="nav-link text-gray-400">[HOME]</a>
+                    <a href="billiards.html" class="nav-link text-gray-400">[COSMIC_BILLIARDS]</a>
+                    <a href="zengarden.html" class="nav-link text-gray-400">[ZEN_GARDEN]</a>
+                    <a href="dna.html" class="nav-link text-gray-400">[DNA]</a>
+                    <a href="solar.html" class="nav-link text-gray-400">[SOLAR_SYSTEM]</a>
+                    <a href="molecule.html" class="nav-link text-gray-400">[MOLECULE]</a>
+                    <a href="physics.html" class="nav-link text-gray-400">[PHYSICS]</a>
+                    <a href="solitaire3d.html" class="nav-link text-gray-400">[SOLITAIRE]</a>
+                    <a href="trippyrun.html" class="nav-link text-gray-400">[TRIPPY_RUN]</a>
+                    <a href="planner.html" class="nav-link text-gray-400">[ROOM_PLANNER]</a>
+                    <a href="converter.html" class="nav-link text-gray-400">[CONVERTER]</a>
+                    <a href="visualizer.html" class="nav-link text-gray-400">[3D_VISUALIZER]</a>
                 </div>
 
-                <button id="mobileMenuBtn" class="lg:hidden text-cyan-400">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                <button id="mobileMenuBtn" class="xl:hidden text-cyan-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"/></svg>
                 </button>
-            </div>
-        </div>
-
-        <div id="mobileMenu" class="hidden glass-panel border-t border-cyan-500/30">
-            <div class="px-6 py-4 grid grid-cols-2 gap-2">
-                <a href="index.html" class="py-2 text-gray-400 font-mono text-xs">[HOME]</a>
-                <a href="billiards.html" class="py-2 text-gray-400 font-mono text-xs">[COSMIC_BILLIARDS]</a>
-                <a href="zengarden.html" class="py-2 text-gray-400 font-mono text-xs">[ZEN_GARDEN]</a>
-                <a href="dna.html" class="py-2 text-gray-400 font-mono text-xs">[DNA]</a>
-                <a href="solar.html" class="py-2 text-gray-400 font-mono text-xs">[SOLAR_SYSTEM]</a>
-                <a href="molecule.html" class="py-2 text-gray-400 font-mono text-xs">[MOLECULE]</a>
-                <a href="physics.html" class="py-2 text-gray-400 font-mono text-xs">[PHYSICS]</a>
-                <a href="solitaire3d.html" class="py-2 text-gray-400 font-mono text-xs">[SOLITAIRE]</a>
-                <a href="trippyrun.html" class="py-2 text-gray-400 font-mono text-xs">[TRIPPY_RUN]</a>
-                <a href="planner.html" class="py-2 text-gray-400 font-mono text-xs">[ROOM_PLANNER]</a>
-                <a href="converter.html" class="py-2 text-gray-400 font-mono text-xs">[CONVERTER]</a>
-                <a href="visualizer.html" class="py-2 text-gray-400 font-mono text-xs">[3D_VISUALIZER]</a>
             </div>
         </div>
     </nav>
 
-    <div class="ui-container mt-24 ml-6 flex flex-col gap-4">
-        <div class="glass-panel p-6 rounded-sm w-72">
-            <h2 class="font-orbitron text-xl font-black text-cyan-400 mb-4 tracking-tighter uppercase">Tactical Chess</h2>
+    <div class="ui-layer h-screen pt-24 px-6 flex justify-between items-start">
+        <div class="glass-panel p-5 w-72 rounded-sm border-l-4 border-l-cyan-500">
+            <h2 class="font-orbitron text-lg font-bold text-cyan-400 mb-4 tracking-widest uppercase">Tactical Chess</h2>
             
-            <div class="space-y-4">
-                <div>
-                    <p class="text-[10px] font-mono text-cyan-500/60 uppercase tracking-widest">System Status</p>
-                    <div id="turnIndicator" class="mt-1 font-mono text-sm py-2 px-3 border border-cyan-500/30 bg-cyan-500/10 text-cyan-400">
-                        WAITING...
+            <div class="space-y-6">
+                <div class="border-b border-cyan-500/20 pb-4">
+                    <p class="text-[10px] font-mono text-cyan-500/60 uppercase mb-2">System Sequence</p>
+                    <div id="turnIndicator" class="font-mono text-sm py-2 px-3 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                        INITIALIZING...
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-2">
-                    <button id="resetBtn" class="neon-btn py-3 font-mono text-xs tracking-widest">REBOOT_GAME</button>
+                <div class="space-y-2">
+                    <button id="resetBtn" class="neon-btn w-full py-2 font-mono text-xs uppercase tracking-tighter">Reload_Matrix</button>
+                    <button id="undoBtn" class="w-full py-2 font-mono text-xs text-gray-400 border border-gray-700 hover:border-cyan-500 transition-colors uppercase">Undo_Input</button>
                 </div>
 
                 <div>
-                    <p class="text-[10px] font-mono text-cyan-500/60 uppercase mb-2">Captured Intel</p>
-                    <div id="capturedByCyan" class="flex flex-wrap gap-1 text-fuchsia-500 text-xl min-h-[24px]"></div>
-                    <div id="capturedByMagenta" class="flex flex-wrap gap-1 text-cyan-400 text-xl mt-2 min-h-[24px]"></div>
+                    <p class="text-[10px] font-mono text-cyan-500/60 uppercase mb-2">Data Logs</p>
+                    <div id="moveHistory" class="h-32 overflow-y-auto font-mono text-[10px] space-y-1 text-gray-500 scrollbar-hide"></div>
                 </div>
             </div>
         </div>
 
-        <div class="glass-panel p-4 rounded-sm w-72">
-            <p class="text-[10px] font-mono text-cyan-500/60 uppercase mb-2">Log_History</p>
-            <div id="moveHistory" class="h-40 overflow-y-auto font-mono text-[10px] space-y-1 text-gray-400"></div>
+        <div class="glass-panel p-5 w-64 rounded-sm border-r-4 border-r-fuchsia-500">
+            <p class="text-[10px] font-mono text-fuchsia-500/60 uppercase mb-3">Captured Assets</p>
+            <div class="space-y-4">
+                <div id="capturedByCyan" class="flex flex-wrap gap-2 text-2xl text-fuchsia-500 min-h-[40px]"></div>
+                <div class="border-t border-white/5 pt-4">
+                    <div id="capturedByMagenta" class="flex flex-wrap gap-2 text-2xl text-cyan-400 min-h-[40px]"></div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-4 border-t border-cyan-500/20">
+                <p class="text-[10px] font-mono text-cyan-500/40 leading-relaxed italic">
+                    "The chessboard is the world, the pieces are the phenomena of the universe."
+                </p>
+            </div>
         </div>
     </div>
-
-    <div id="statusMessage" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 glass-panel px-8 py-3 font-orbitron text-cyan-400 hidden uppercase tracking-widest border-cyan-400"></div>
 
     <div id="gameCanvas"></div>
 
     <script>
-        // UI Interaction
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        mobileMenuBtn.onclick = () => mobileMenu.classList.toggle('hidden');
+        // Particle Init
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 40; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particlesContainer.appendChild(particle);
+        }
 
-        // Note: Insert your existing Three.js Chess Logic here
-        // The styling now matches the index.html cyberpunk aesthetic.
+        // Add your Three.js logic here to render into #gameCanvas
+        // Use the existing logic from your chess3d.html file.
     </script>
 </body>
 </html>
