@@ -2,7 +2,6 @@
    1. VARIABLES & THEMES
    ============================================= */
 :root {
-    /* Colors - Dark Mode (Default) */
     --bg-color: #0d0221;
     --card-bg: rgba(255, 255, 255, 0.05);
     --text-color: #ccd6f6;
@@ -10,11 +9,7 @@
     --white: #e6f1ff;
     --cyan: #00f5d4;
     --magenta: #ff00f5;
-    
-    /* Grid Colors */
     --grid-color: rgba(0, 245, 212, 0.2);
-    
-    /* Setup */
     --font-sans: 'Inter', sans-serif;
     --font-mono: 'SF Mono', 'Fira Code', monospace;
     --grid-size: 50px;
@@ -27,9 +22,7 @@ body.light-mode {
     --text-color: #1a1a1a;
     --header-bg: rgba(255, 255, 255, 0.9);
     --white: #000000;
-    
-    /* Theme Accents - Solar Orange */
-    --cyan: #ff4500; 
+    --cyan: #ff4500; /* Solar Orange */
     --magenta: #cc3700; 
     --grid-color: rgba(255, 69, 0, 0.1);
 }
@@ -41,14 +34,12 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: var(--font-sans);
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     line-height: 1.5;
     overflow-x: hidden;
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* The Animated Perspective Grid */
 body::before {
     content: '';
     position: fixed;
@@ -69,165 +60,30 @@ body::before {
 }
 
 /* =============================================
-   3. NAVIGATION
+   3. NAVIGATION (FIXED ALIGNMENT)
    ============================================= */
 header {
     background-color: var(--header-bg);
     backdrop-filter: blur(12px);
-    padding: 15px 5%;
+    padding: 10px 5%;
     position: fixed;
     top: 0; width: 100%;
-    z-index: 100;
+    z-index: 1000;
     border-bottom: 1px solid var(--cyan);
     box-shadow: 0 0 15px var(--cyan);
     box-sizing: border-box;
-    transition: var(--transition);
 }
 
-.navbar {
+/* Ensure the nav container behaves on all pages */
+nav, .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .logo {
     color: var(--cyan);
     font-family: var(--font-mono);
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    text-shadow: 0 0 10px var(--cyan);
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 25px;
-}
-
-.nav-links a {
-    color: var(--text-color);
-    text-decoration: none;
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    transition: color 0.3s;
-}
-
-.nav-links a:hover { color: var(--cyan); }
-
-/* =============================================
-   4. HERO SECTION
-   ============================================= */
-.hero {
-    position: relative;
-    min-height: 80vh;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 50px;
-    align-items: center;
-    padding: 150px 10% 80px;
-}
-
-.hero-canvas {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -1;
-    pointer-events: none;
-}
-
-.profile-picture {
-    width: 280px; height: 280px;
-    border-radius: 50%;
-    border: 4px solid var(--cyan);
-    box-shadow: 0 0 30px var(--cyan), inset 0 0 20px var(--magenta);
-    overflow: hidden;
-    position: relative;
-    z-index: 2;
-    transition: var(--transition);
-}
-
-.profile-picture img { width: 100%; height: 100%; object-fit: cover; }
-
-.hero-right h1 {
-    font-size: 3.5rem;
-    color: var(--white);
-    text-shadow: 0 0 15px var(--cyan);
-    margin-bottom: 20px;
-}
-
-/* =============================================
-   5. FEATURE GRID & BUTTONS
-   ============================================= */
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    padding: 20px 0;
-}
-
-.feature-item {
-    background: var(--card-bg);
-    border: 1px solid var(--cyan);
-    padding: 30px;
-    backdrop-filter: blur(10px);
-    transition: var(--transition);
-    border-radius: 8px;
-    color: var(--text-color);
-    text-decoration: none;
-}
-
-.feature-item:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 0 30px var(--cyan);
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.cta-button {
-    background: linear-gradient(45deg, var(--cyan), var(--magenta));
-    color: #fff;
-    padding: 12px 24px;
-    border-radius: 4px;
-    font-weight: bold;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: var(--transition);
-    display: inline-block;
-}
-
-/* =============================================
-   6. SEARCH BAR
-   ============================================= */
-.search-form {
-    display: flex;
-    align-items: center;
-}
-
-.search-form input {
-    background: var(--card-bg);
-    border: 1px solid var(--magenta);
-    color: var(--text-color);
-    padding: 8px 15px;
-    border-radius: 4px 0 0 4px;
-    outline: none;
-}
-
-.search-form button {
-    background: var(--magenta);
-    color: white;
-    border: none;
-    padding: 9px 15px;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-}
-
-/* =============================================
-   7. RESPONSIVE
-   ============================================= */
-@media (max-width: 992px) {
-    .hero { grid-template-columns: 1fr; text-align: center; }
-    .hero-left { order: 2; }
-    .hero-right { order: 1; }
-    .profile-picture { margin: 0 auto; width: 200px; height: 200px; }
-    .nav-links { display: none; }
-}
+    font
