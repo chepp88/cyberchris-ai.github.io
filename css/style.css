@@ -230,3 +230,38 @@ footer {
     .trust-logos { gap: 30px; }
     .logo-container { width: 120px; }
 }
+.trust-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vertically centers logos of different heights */
+    flex-wrap: wrap;
+    gap: 40px; 
+    padding: 20px;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px; /* Gives each logo a consistent 'slot' */
+    height: 80px; /* Fixed height for the container */
+}
+
+.trust-logo {
+    max-width: 100%;
+    max-height: 100%; /* Ensures it fits inside the 80px container */
+    width: auto;      /* Keeps the original width ratio */
+    height: auto;     /* Keeps the original height ratio */
+    object-fit: contain; /* THE FIX: prevents stretching/squishing */
+    
+    /* Your existing styling */
+    filter: grayscale(100%) brightness(1.2);
+    opacity: 0.6;
+    transition: all 0.4s ease;
+}
+
+.trust-logo:hover {
+    filter: grayscale(0%) brightness(1);
+    opacity: 1;
+    transform: scale(1.1);
+}
