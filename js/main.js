@@ -1,30 +1,31 @@
 /**
  * js/main.js - Unified CyberSolutions Engine
- * Features: Three.js Hero, Theme Switcher, and Category Filtering
  */
 
-let scene, camera, renderer, nodes = [], connections = [];
-let lineMaterial;
+// 1. Global State
+window.nodes = [];
+window.connections = [];
+window.lineMaterial = null;
 const mouse = { x: 0, y: 0 };
 
-// --- 1. Three.js Hero Background ---
+// 2. Three.js Hero Logic
 function initThreeHero() {
     const canvas = document.getElementById('hero-canvas');
     if (!canvas) return;
 
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 40;
 
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     const getColors = () => {
         const style = getComputedStyle(document.body);
         return {
-            cyan: new THREE.Color(style.getPropertyValue('--cyan').trim() || '#00f5d4'),
-            magenta: new THREE.Color(style.getPropertyValue('--magenta').trim() || '#ff00f5')
+            cyan: style.getPropertyValue('--cyan').trim() || '#00f5d4',
+            magenta: style.getPropertyValue('--magenta').trim() || '#ff00f5'
         };
     };
 
@@ -34,32 +35,30 @@ function initThreeHero() {
     const nodeGeo = new THREE.SphereGeometry(0.3, 12, 12);
     for (let i = 0; i < 80; i++) {
         const mat = new THREE.MeshBasicMaterial({ 
-            color: Math.random() > 0.5 ? theme.cyan : theme.magenta 
+            color: new THREE.Color(i % 2 === 0 ? theme.cyan : theme.magenta) 
         });
         const node = new THREE.Mesh(nodeGeo, mat);
         node.position.set((Math.random()-0.5)*80, (Math.random()-0.5)*45, (Math.random()-0.5)*20);
-        node.userData = { 
-            speed: 0.0005 + Math.random() * 0.001, 
-            pulse: Math.random() * Math.PI 
-        };
+        node.userData = { speed: 0.0005 + Math.random() * 0.001, pulse: Math.random() * Math.PI };
         scene.add(node);
-        nodes.push(node);
+        window.nodes.push(node);
     }
 
     // Create Connections
-    lineMaterial = new THREE.LineBasicMaterial({ 
-        color: theme.cyan, 
+    window.lineMaterial = new THREE.LineBasicMaterial({ 
+        color: new THREE.Color(theme.cyan), 
         transparent: true, 
         opacity: 0.15 
     });
+    
     for (let i = 0; i < 45; i++) {
-        const start = nodes[Math.floor(Math.random() * nodes.length)];
-        const end = nodes[Math.floor(Math.random() * nodes.length)];
+        const start = window.nodes[Math.floor(Math.random() * window.nodes.length)];
+        const end = window.nodes[Math.floor(Math.random() * window.nodes.length)];
         if (start !== end) {
             const geo = new THREE.BufferGeometry().setFromPoints([start.position, end.position]);
-            const line = new THREE.Line(geo, lineMaterial);
+            const line = new THREE.Line(geo, window.lineMaterial);
             scene.add(line);
-            connections.push({ line, start, end });
+            window.connections.push({ line, start, end });
         }
     }
 
@@ -67,30 +66,25 @@ function initThreeHero() {
         requestAnimationFrame(animate);
         const now = Date.now();
 
-        // Node Movement
-        nodes.forEach(n => {
+        window.nodes.forEach(n => {
             n.position.y += Math.sin(now * n.userData.speed) * 0.01;
             n.scale.setScalar(1 + Math.sin(now * 0.002 + n.userData.pulse) * 0.2);
         });
 
-        // Update Lines
-        connections.forEach(c => {
+        window.connections.forEach(c => {
             const pos = c.line.geometry.attributes.position.array;
             pos[0] = c.start.position.x; pos[1] = c.start.position.y; pos[2] = c.start.position.z;
             pos[3] = c.end.position.x; pos[4] = c.end.position.y; pos[5] = c.end.position.z;
             c.line.geometry.attributes.position.needsUpdate = true;
         });
 
-        // Parallax Camera
         camera.position.x += (mouse.x * 5 - camera.position.x) * 0.05;
         camera.position.y += (-(mouse.y * 5) - camera.position.y) * 0.05;
         camera.lookAt(0, 0, 0);
-
         renderer.render(scene, camera);
     }
     animate();
 
-    // Handle Resize
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
@@ -98,36 +92,41 @@ function initThreeHero() {
     });
 }
 
-// --- 2. Theme & Filter Logic ---
+// 3. Theme Sync Helper
+function updateThreeJSColors() {
+    if (window.lineMaterial && window.nodes.length > 0) {
+        const style = getComputedStyle(document.body);
+        const newCyan = style.getPropertyValue('--cyan').trim();
+        const newMagenta = style.getPropertyValue('--magenta').trim();
+
+        window.lineMaterial.color.set(newCyan);
+        window.nodes.forEach((n, i) => {
+            n.material.color.set(i % 2 === 0 ? newCyan : newMagenta);
+        });
+    }
+}
+
+// 4. Initialize Everything on Load
 document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
     const toggleBtn = document.getElementById('theme-toggle-button');
     const filterBtns = document.querySelectorAll('.filter-btn');
     const featureItems = document.querySelectorAll('.feature-item');
 
-    // Persistence Check
+    // Load Theme Persistence
     if(localStorage.getItem('theme') === 'light') body.classList.add('light-mode');
 
-    // Theme Toggle Click
+    // Theme Toggle
     if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
             body.classList.toggle('light-mode');
             const isLight = body.classList.contains('light-mode');
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            
-            // Sync Three.js Colors
-            const style = getComputedStyle(document.body);
-            const newCyan = new THREE.Color(style.getPropertyValue('--cyan').trim());
-            const newMagenta = new THREE.Color(style.getPropertyValue('--magenta').trim());
-
-            if (lineMaterial) lineMaterial.color.copy(newCyan);
-            nodes.forEach((n, i) => {
-                n.material.color.copy(i % 2 === 0 ? newCyan : newMagenta);
-            });
+            updateThreeJSColors(); // Run 3D color sync
         });
     }
 
-    // Category Filtering
+    // Category Filtering (with fade effect)
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
@@ -136,12 +135,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const filter = btn.getAttribute('data-filter');
             featureItems.forEach(item => {
                 const category = item.getAttribute('data-category');
+                item.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+                
                 if (filter === 'all' || category === filter) {
                     item.style.display = 'block';
-                    setTimeout(() => item.classList.add('visible'), 10);
+                    setTimeout(() => { item.style.opacity = '1'; item.style.transform = 'scale(1)'; }, 10);
                 } else {
-                    item.style.display = 'none';
-                    item.classList.remove('visible');
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.95)';
+                    setTimeout(() => { item.style.display = 'none'; }, 300);
                 }
             });
         });
@@ -152,47 +154,18 @@ document.addEventListener('DOMContentLoaded', () => {
         mouse.x = (e.clientX / window.innerWidth) - 0.5;
         mouse.y = (e.clientY / window.innerHeight) - 0.5;
     });
-});
 
-// Load Three.js Library and Start
-const script = document.createElement('script');
-script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
-script.onload = initThreeHero;
-document.head.appendChild(script);
-// --- Enhanced Category Filtering ---
-const filterBtns = document.querySelectorAll('.filter-btn');
-const featureItems = document.querySelectorAll('.feature-item');
-
-// Initial reveal for items already on screen
-featureItems.forEach((item, index) => {
-    setTimeout(() => item.classList.add('visible'), index * 100);
-});
-
-filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        // Active Button State
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const filter = btn.getAttribute('data-filter');
-
-        featureItems.forEach((item) => {
-            const category = item.getAttribute('data-category');
-            
-            // Step 1: Hide everything first
-            item.classList.remove('visible');
-            
-            // Step 2: After a brief delay, show/hide based on filter
-            setTimeout(() => {
-                if (filter === 'all' || category === filter) {
-                    item.classList.remove('hidden');
-                    // Trigger reflow for animation
-                    void item.offsetWidth; 
-                    item.classList.add('visible');
-                } else {
-                    item.classList.add('hidden');
-                }
-            }, 300); 
-        });
-    });
-});
+    // Useless Fact logic (if element exists)
+    const factBtn = document.querySelector('[onclick="getNewFact()"]');
+    if (factBtn) {
+        window.getNewFact = async function() {
+            const factText = document.getElementById('useless-fact');
+            if (!factText) return;
+            factText.innerText = "Querying the void...";
+            try {
+                const res = await fetch('https://uselessfacts.jsph.pl/random.json?language=en');
+                const data = await res.json();
+                factText.innerText = data.text;
+            } catch (e) { factText.innerText = "The void is silent."; }
+        };
+        getNewFact();
