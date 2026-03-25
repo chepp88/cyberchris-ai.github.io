@@ -57,7 +57,48 @@ body::before {
     z-index: -1;
     transform: perspective(600px) rotateX(45deg);
 }
+.trust-bar {
+    padding: 60px 0;
+    text-align: center;
+}
 
+.trust-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 50px;
+    padding: 20px;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px; /* Forces equal spacing */
+}
+
+.trust-logo {
+    max-width: 100%;
+    max-height: 70px; /* Keeps the FBI and Burger King logos the same height */
+    filter: grayscale(100%) brightness(1.2);
+    opacity: 0.6;
+    transition: all 0.4s ease;
+}
+
+.trust-logo:hover {
+    filter: grayscale(0%) brightness(1);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.section-title {
+    margin-bottom: 40px;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--neon-cyan);
+}
 @keyframes grid-scroll {
     from {
         background-position: 0 0;
