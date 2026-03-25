@@ -11,83 +11,107 @@
 
     <style>
         :root { --neon-cyan: #00ffff; --neon-magenta: #ff00ff; }
-        body { background: #000810; color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; }
+        body { background: #000810; color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; height: 100vh; }
 
         .explorer-container {
             display: grid;
-            grid-template-columns: 350px 1fr;
-            height: calc(100vh - 100px);
+            grid-template-columns: 360px 1fr;
+            height: calc(100vh - 80px);
             gap: 1px;
             background: rgba(0, 255, 255, 0.1);
             border: 1px solid rgba(0, 255, 255, 0.2);
-            margin: 20px;
+            margin: 15px;
         }
 
         .dir-column { background: #000c18; overflow-y: auto; padding: 25px; border-right: 1px solid rgba(0, 255, 255, 0.1); }
-        .preview-column { background: #000810; overflow-y: auto; padding: 50px; position: relative; }
+        .preview-column { background: #000810; overflow-y: auto; padding: 40px; position: relative; }
 
+        /* Project Entry Styling */
         .project-entry {
-            padding: 12px;
+            padding: 10px 14px;
             border-left: 3px solid transparent;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             cursor: pointer;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.2s ease-in-out;
             font-family: 'Share Tech Mono', monospace;
             font-size: 11px;
             color: #888;
-            text-transform: uppercase;
         }
-        .project-entry:hover { background: rgba(0, 255, 255, 0.05); border-left-color: var(--neon-cyan); color: white; padding-left: 18px; }
+        .project-entry:hover { background: rgba(0, 255, 255, 0.05); border-left-color: var(--neon-cyan); color: white; }
         .project-entry.active { background: rgba(0, 255, 255, 0.1); border-left-color: var(--neon-cyan); color: var(--neon-cyan); }
         
-        /* Arcade Section Styling */
-        .arcade-label { font-size: 9px; color: var(--neon-magenta); tracking-widest; margin-top: 25px; margin-bottom: 10px; display: block; border-bottom: 1px solid rgba(255, 0, 255, 0.2); padding-bottom: 5px; }
+        /* Badges */
+        .node-badge { font-size: 8px; padding: 1px 5px; border-radius: 2px; font-weight: bold; text-transform: uppercase; }
+        .badge-score { background: rgba(255, 0, 255, 0.15); color: var(--neon-magenta); border: 1px solid var(--neon-magenta); }
+        .badge-load { background: rgba(0, 255, 255, 0.1); color: var(--neon-cyan); border: 1px solid var(--neon-cyan); }
 
+        /* Skills */
         .progress-bg { background: rgba(255,255,255,0.05); height: 3px; width: 100%; margin-top: 5px; overflow: hidden; }
-        .progress-fill { background: var(--neon-cyan); height: 100%; width: 0%; transition: width 2s ease; box-shadow: 0 0 10px var(--neon-cyan); }
+        .progress-fill { background: var(--neon-cyan); height: 100%; width: 0%; transition: width 1.5s ease-out; box-shadow: 0 0 8px var(--neon-cyan); }
 
-        .scanline { width: 100%; height: 2px; background: rgba(0, 255, 255, 0.05); position: absolute; top: 0; left: 0; pointer-events: none; animation: scan 10s linear infinite; }
+        /* System Log */
+        #system-log {
+            font-family: 'Share Tech Mono';
+            font-size: 9px;
+            color: #444;
+            height: 60px;
+            overflow: hidden;
+            border-top: 1px solid rgba(0, 255, 255, 0.1);
+            margin-top: 30px;
+            padding-top: 10px;
+        }
+
+        .scanline { width: 100%; height: 2px; background: rgba(0, 255, 255, 0.03); position: absolute; top: 0; left: 0; pointer-events: none; animation: scan 12s linear infinite; }
         @keyframes scan { from { top: 0; } to { top: 100%; } }
     </style>
 </head>
-<body class="flex flex-col h-screen">
+<body class="flex flex-col">
 
     <div class="bg-black border-b border-cyan-500/20 py-2 px-6 flex justify-between items-center font-['Share_Tech_Mono'] text-[10px] tracking-widest text-cyan-500/80">
-        <div>SYSTEM_STATUS: ONLINE // ARCHIVE_042</div>
+        <div><span class="animate-pulse text-green-500">●</span> PORTFOLIO_SUBSYSTEM // ARCHIVE_2026</div>
         <div id="clock">00:00:00</div>
     </div>
 
     <div class="explorer-container">
         <aside class="dir-column flex flex-col justify-between">
             <div>
-                <h3 class="text-[10px] text-gray-500 uppercase tracking-[5px] mb-6 font-bold">File_Directory</h3>
+                <h3 class="text-[10px] text-gray-500 uppercase tracking-[4px] mb-6 font-bold">File_Directory</h3>
                 
                 <div class="space-y-1">
                     <div class="project-entry active" onclick="showProject('enterprise')">[DIR] ENTERPRISE_SYSTEMS</div>
                     <div class="project-entry" onclick="showProject('security')">[DIR] SECURITY_AUDITS</div>
                 </div>
 
-                <span class="arcade-label uppercase font-bold tracking-[3px]">Arcade_Simulation_Nodes</span>
+                <span class="text-[9px] text-fuchsia-500 uppercase font-bold tracking-[3px] mt-8 mb-4 block border-b border-fuchsia-900/30 pb-1">Simulation_Nodes</span>
                 <div class="space-y-1">
-                    <div class="project-entry" onclick="showProject('pong')">[EXE] 3D_PONG_V2</div>
-                    <div class="project-entry" onclick="showProject('asteroids')">[EXE] ASTEROID_FIELD</div>
-                    <div class="project-entry" onclick="showProject('maze')">[EXE] MAZE_EXPLORER</div>
-                    <div class="project-entry" onclick="showProject('solitaire')">[EXE] 3D_SOLITAIRE</div>
+                    <div class="project-entry flex justify-between items-center" onclick="showProject('pong')">
+                        <span>[EXE] 3D_PONG_V2</span> <span class="node-badge badge-score">HI: 99k</span>
+                    </div>
+                    <div class="project-entry flex justify-between items-center" onclick="showProject('asteroids')">
+                        <span>[EXE] ASTEROID_FIELD</span> <span class="node-badge badge-load">CPU: 14%</span>
+                    </div>
+                    <div class="project-entry flex justify-between items-center" onclick="showProject('maze')">
+                        <span>[EXE] MAZE_EXPLORER</span> <span class="node-badge badge-score">LVL: 09</span>
+                    </div>
+                    <div class="project-entry flex justify-between items-center" onclick="showProject('solitaire')">
+                        <span>[EXE] 3D_SOLITAIRE</span> <span class="node-badge badge-load">MEM: 0.4G</span>
+                    </div>
                 </div>
 
-                <div class="project-entry mt-10 text-fuchsia-500" onclick="decryptResume()">[FILE] RESUME_2026.PDF</div>
+                <div class="project-entry mt-10 text-fuchsia-400 font-bold hover:text-white" onclick="decryptResume()">[FILE] RESUME_FINAL.PDF</div>
             </div>
 
-            <div class="mt-10">
-                <h4 class="text-[9px] text-cyan-500 mb-4 tracking-[3px] font-bold uppercase">Competency</h4>
+            <div class="mt-10 p-4 bg-cyan-900/10 rounded">
+                <h4 class="text-[9px] text-cyan-500 mb-4 tracking-[3px] font-bold uppercase">Competency_Metrics</h4>
                 <div class="mb-3">
-                    <div class="flex justify-between text-[9px] font-['Share_Tech_Mono'] mb-1"><span>FULL_STACK</span><span>94%</span></div>
+                    <div class="flex justify-between text-[9px] font-['Share_Tech_Mono']"><span>FULL_STACK</span><span>94%</span></div>
                     <div class="progress-bg"><div class="progress-fill" data-width="94%"></div></div>
                 </div>
                 <div class="mb-3">
-                    <div class="flex justify-between text-[9px] font-['Share_Tech_Mono'] mb-1"><span>GAME_DESIGN</span><span>85%</span></div>
-                    <div class="progress-bg"><div class="progress-fill" data-width="85%"></div></div>
+                    <div class="flex justify-between text-[9px] font-['Share_Tech_Mono']"><span>GAME_DEV</span><span>88%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" data-width="88%"></div></div>
                 </div>
+                <div class="text-[8px] text-gray-600 mt-2 italic uppercase">Neural_Sync: Optimal</div>
             </div>
         </aside>
 
@@ -96,22 +120,25 @@
             
             <div id="project-display" class="relative z-10 opacity-0 transition-opacity duration-300">
                 <div class="border-b border-cyan-900/50 pb-8 mb-8">
-                    <h2 class="font-['Orbitron'] text-5xl font-black mb-4 uppercase text-white" id="p-title">Enterprise_Systems</h2>
-                    <div class="flex gap-8 text-[11px] font-['Share_Tech_Mono'] text-gray-500">
-                        <span>TECH: <span class="text-cyan-400" id="p-stack">NODE.JS / AWS</span></span>
-                        <span>STATUS: <span class="text-white" id="p-stat">DEPLOYED</span></span>
+                    <h2 class="font-['Orbitron'] text-5xl font-black mb-4 uppercase text-white tracking-tighter" id="p-title">Enterprise_Systems</h2>
+                    <div class="flex flex-wrap gap-6 text-[11px] font-['Share_Tech_Mono']">
+                        <span class="text-gray-500">TECH: <span class="text-cyan-400" id="p-stack">NODE.JS / AWS</span></span>
+                        <span class="text-gray-500">STAT: <span class="text-white" id="p-stat">DEPLOYED</span></span>
+                        <span class="text-gray-500">NEURAL_COMPAT: <span class="text-green-400" id="p-compat">99%</span></span>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    <div class="space-y-6">
-                        <p class="text-lg text-gray-400 font-light leading-relaxed" id="p-desc">Project details loading...</p>
-                        <a href="#" id="launch-btn" class="inline-block px-8 py-3 border border-cyan-500 text-cyan-500 font-['Share_Tech_Mono'] text-xs uppercase hover:bg-cyan-500 hover:text-black transition-all">Launch_Application_Module</a>
+                    <div class="flex flex-col justify-between">
+                        <p class="text-lg text-gray-400 font-light leading-relaxed mb-8" id="p-desc">Initializing archive...</p>
+                        <a href="#" id="launch-btn" class="inline-block text-center px-10 py-4 border border-cyan-500 text-cyan-500 font-['Share_Tech_Mono'] text-xs uppercase hover:bg-cyan-500 hover:text-black transition-all">Execute_Project_Module</a>
+                        
+                        <div id="system-log"></div>
                     </div>
 
-                    <div class="aspect-video bg-cyan-900/10 border border-cyan-500/20 flex items-center justify-center group relative">
-                         <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 to-transparent"></div>
-                         <div class="text-[10px] font-['Share_Tech_Mono'] text-cyan-800 tracking-widest">VISUAL_ARRAY_PREVIEW</div>
+                    <div class="aspect-video bg-cyan-900/10 border border-cyan-500/20 flex flex-col items-center justify-center group relative overflow-hidden">
+                         <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 to-transparent"></div>
+                         <div class="text-[10px] font-['Share_Tech_Mono'] text-cyan-700 tracking-[5px] animate-pulse">VISUAL_DATA_ARRAY</div>
                     </div>
                 </div>
             </div>
@@ -120,26 +147,37 @@
 
     <script>
         const projectData = {
-            enterprise: { title: "Enterprise_Systems", stack: "NODE.JS / AWS / DOCKER", stat: "STABLE", desc: "Large scale backend infrastructure for logistics. Built with high-availability failovers and real-time data sync.", link: "#" },
-            security: { title: "Security_Audits", stack: "PYTHON / KALI", stat: "SECURE", desc: "Penetration testing and server hardening for financial sectors. Implementing Zero-Trust policies.", link: "#" },
-            pong: { title: "3D_Pong_v2", stack: "THREE.JS / WEBGL", stat: "PLAYABLE", desc: "A high-speed neon arcade classic reimagined in a 3D environment with dynamic lighting and physics.", link: "3d-pong.html" },
-            asteroids: { title: "Asteroid_Field", stack: "THREE.JS / GLSL", stat: "PLAYABLE", desc: "Space-shooter simulation featuring procedural asteroid generation and high-intensity combat mechanics.", link: "3d-asteroid-field.html" },
-            maze: { title: "Maze_Explorer", stack: "JAVASCRIPT / CANV", stat: "PLAYABLE", desc: "Procedurally generated 3D maze navigation with real-time lighting and spatial audio triggers.", link: "Momentum-runner.html" },
-            solitaire: { title: "3D_Solitaire", stack: "THREE.JS / REACT", stat: "PLAYABLE", desc: "The classic card game logic rebuilt in a 3D geometric space for a modern tactile feel.", link: "solitaire.html" }
+            enterprise: { title: "Enterprise_Systems", stack: "NODE.JS / AWS", stat: "STABLE", compat: "100%", desc: "High-scale backend infrastructure for logistics. Built with high-availability failovers and real-time data sync across multi-region clusters.", link: "#" },
+            security: { title: "Security_Audits", stack: "PYTHON / KALI / BASH", stat: "SECURE", compat: "96%", desc: "Full-spectrum penetration testing and architectural hardening. Implemented Zero-Trust identity protocols for financial data protection.", link: "#" },
+            pong: { title: "3D_Pong_v2", stack: "THREE.JS / WEBGL", stat: "PLAYABLE", compat: "99%", desc: "A high-speed neon arcade classic reimagined in a 3D environment with dynamic lighting and high-refresh physics.", link: "3d-pong.html" },
+            asteroids: { title: "Asteroid_Field", stack: "THREE.JS / GLSL", stat: "PLAYABLE", compat: "92%", desc: "Space-shooter simulation featuring procedural asteroid generation and optimized particle systems for massive combat encounters.", link: "3d-asteroid-field.html" },
+            maze: { title: "Maze_Explorer", stack: "JS / CANV2D", stat: "PLAYABLE", compat: "85%", desc: "Procedurally generated 3D maze navigation with real-time shadow casting and spatial audio triggers.", link: "Momentum-runner.html" },
+            solitaire: { title: "3D_Solitaire", stack: "THREE.JS / REACT", stat: "PLAYABLE", compat: "94%", desc: "The classic card game logic rebuilt in a 3D geometric space for a modern tactile feel and customizable deck skins.", link: "solitaire.html" }
         };
+
+        function addLog(msg) {
+            const log = document.getElementById('system-log');
+            const entry = document.createElement('div');
+            entry.innerText = `> ${new Date().toLocaleTimeString()} : ${msg}`;
+            log.prepend(entry);
+        }
 
         function showProject(key) {
             const display = document.getElementById('project-display');
             display.style.opacity = 0;
+            addLog(`MOUNTING_FS: ${key.toUpperCase()}...`);
+            
             setTimeout(() => {
                 const data = projectData[key];
                 document.getElementById('p-title').innerText = data.title;
                 document.getElementById('p-stack').innerText = data.stack;
                 document.getElementById('p-stat').innerText = data.stat;
+                document.getElementById('p-compat').innerText = data.compat;
                 document.getElementById('p-desc').innerText = data.desc;
                 document.getElementById('launch-btn').href = data.link;
                 display.style.opacity = 1;
-            }, 200);
+                addLog(`ACCESS_GRANTED: ${data.title} LOADED.`);
+            }, 250);
 
             document.querySelectorAll('.project-entry').forEach(el => el.classList.remove('active'));
             event.currentTarget.classList.add('active');
@@ -153,10 +191,11 @@
         window.onload = () => {
             setInterval(updateClock, 1000);
             updateClock();
-            document.getElementById('project-display').style.opacity = 1;
+            showProject('enterprise'); // Initial load
             document.querySelectorAll('.progress-fill').forEach(bar => {
-                setTimeout(() => { bar.style.width = bar.getAttribute('data-width'); }, 500);
+                setTimeout(() => { bar.style.width = bar.getAttribute('data-width'); }, 600);
             });
+            addLog("SYSTEM_BOOT: PORTFOLIO_KERNEL_v4.2_LOADED");
         };
     </script>
 </body>
