@@ -1,68 +1,30 @@
+/**
+ * js/filter.js - Sidebar & Search Logic
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const searchBar = document.getElementById('search-bar');
-    const showGames = document.getElementById('show-games');
-    const showUtilities = document.getElementById('show-utilities');
-    const viewModeToggle = document.getElementById('view-mode-toggle');
-    const viewModeLabel = document.getElementById('view-mode-label');
-    const appsGrid = document.getElementById('apps-grid');
-    const appItems = Array.from(appsGrid.getElementsByClassName('feature-item'));
+    const gameCheck = document.getElementById('show-games');
+    const utilityCheck = document.getElementById('show-utilities');
+    const items = document.querySelectorAll('.feature-item');
 
-    function filterAndDisplayApps() {
-        const searchTerm = searchBar.value.toLowerCase();
-        const gamesVisible = showGames.checked;
-        const utilitiesVisible = showUtilities.checked;
+    function runFilters() {
+        const query = searchBar ? searchBar.value.toLowerCase() : '';
+        const showGames = gameCheck ? gameCheck.checked : true;
+        const showUtils = utilityCheck ? utilityCheck.checked : true;
 
-        appItems.forEach(item => {
-            const title = item.querySelector('h3').textContent.toLowerCase();
+        items.forEach(item => {
+            const name = item.innerText.toLowerCase();
             const category = item.getAttribute('data-category');
+            let visible = name.includes(query);
 
-            const searchMatch = title.includes(searchTerm);
-            const categoryMatch = (gamesVisible && category === 'game') || (utilitiesVisible && category === 'utility');
+            if (category === 'game' && !showGames) visible = false;
+            if (category === 'utility' && !showUtils) visible = false;
 
-            if (searchMatch && categoryMatch) {
-                item.style.display = '';
-            } else {
-                item.style.display = 'none';
-            }
+            item.style.display = visible ? 'block' : 'none';
         });
     }
 
-    function toggleViewMode() {
-        if (viewModeToggle.checked) {
-            appsGrid.classList.add('list-view');
-            viewModeLabel.textContent = 'List';
-        } else {
-            appsGrid.classList.remove('list-view');
-            viewModeLabel.textContent = 'Grid';
-        }
-    }
-
-    searchBar.addEventListener('input', filterAndDisplayApps);
-    showGames.addEventListener('change', filterAndDisplayApps);
-    showUtilities.addEventListener('change', filterAndDisplayApps);
-    viewModeToggle.addEventListener('change', toggleViewMode);
-
-    // Initial filter and view mode setup
-    filterAndDisplayApps();
-    toggleViewMode();
+    if (searchBar) searchBar.addEventListener('input', runFilters);
+    if (gameCheck) gameCheck.addEventListener('change', runFilters);
+    if (utilityCheck) utilityCheck.addEventListener('change', runFilters);
 });
-/**
- * View Mode Toggle (Grid vs List)
- */
-const viewToggle = document.getElementById('view-mode-toggle');
-const viewLabel = document.getElementById('view-mode-label');
-const appsGrid = document.getElementById('apps-grid');
-
-if (viewToggle && appsGrid) {
-    viewToggle.addEventListener('change', () => {
-        if (viewToggle.checked) {
-            // Switch to List View
-            appsGrid.classList.add('list-view');
-            if (viewLabel) viewLabel.innerText = 'List';
-        } else {
-            // Switch to Grid View
-            appsGrid.classList.remove('list-view');
-            if (viewLabel) viewLabel.innerText = 'Grid';
-        }
-    });
-}
