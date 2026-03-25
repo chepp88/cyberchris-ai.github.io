@@ -159,3 +159,40 @@ const script = document.createElement('script');
 script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
 script.onload = initThreeHero;
 document.head.appendChild(script);
+// --- Enhanced Category Filtering ---
+const filterBtns = document.querySelectorAll('.filter-btn');
+const featureItems = document.querySelectorAll('.feature-item');
+
+// Initial reveal for items already on screen
+featureItems.forEach((item, index) => {
+    setTimeout(() => item.classList.add('visible'), index * 100);
+});
+
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Active Button State
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.getAttribute('data-filter');
+
+        featureItems.forEach((item) => {
+            const category = item.getAttribute('data-category');
+            
+            // Step 1: Hide everything first
+            item.classList.remove('visible');
+            
+            // Step 2: After a brief delay, show/hide based on filter
+            setTimeout(() => {
+                if (filter === 'all' || category === filter) {
+                    item.classList.remove('hidden');
+                    // Trigger reflow for animation
+                    void item.offsetWidth; 
+                    item.classList.add('visible');
+                } else {
+                    item.classList.add('hidden');
+                }
+            }, 300); 
+        });
+    });
+});
