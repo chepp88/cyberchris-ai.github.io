@@ -1,30 +1,27 @@
-/**
- * js/filter.js - Sidebar & Search Logic
- */
 document.addEventListener('DOMContentLoaded', () => {
-    const searchBar = document.getElementById('search-bar');
-    const gameCheck = document.getElementById('show-games');
-    const utilityCheck = document.getElementById('show-utilities');
+    const searchInput = document.getElementById('search-bar');
+    const gamesToggle = document.getElementById('show-games');
+    const utilsToggle = document.getElementById('show-utilities');
     const items = document.querySelectorAll('.feature-item');
 
-    function runFilters() {
-        const query = searchBar ? searchBar.value.toLowerCase() : '';
-        const showGames = gameCheck ? gameCheck.checked : true;
-        const showUtils = utilityCheck ? utilityCheck.checked : true;
+    function filterApps() {
+        const term = searchInput ? searchInput.value.toLowerCase() : '';
+        const showGames = gamesToggle ? gamesToggle.checked : true;
+        const showUtils = utilsToggle ? utilsToggle.checked : true;
 
         items.forEach(item => {
-            const name = item.innerText.toLowerCase();
+            const title = item.querySelector('h3').innerText.toLowerCase();
             const category = item.getAttribute('data-category');
-            let visible = name.includes(query);
+            
+            let isVisible = title.includes(term);
+            if (category === 'game' && !showGames) isVisible = false;
+            if (category === 'utility' && !showUtils) isVisible = false;
 
-            if (category === 'game' && !showGames) visible = false;
-            if (category === 'utility' && !showUtils) visible = false;
-
-            item.style.display = visible ? 'block' : 'none';
+            item.style.display = isVisible ? '' : 'none';
         });
     }
 
-    if (searchBar) searchBar.addEventListener('input', runFilters);
-    if (gameCheck) gameCheck.addEventListener('change', runFilters);
-    if (utilityCheck) utilityCheck.addEventListener('change', runFilters);
+    if (searchInput) searchInput.addEventListener('input', filterApps);
+    if (gamesToggle) gamesToggle.addEventListener('change', filterApps);
+    if (utilsToggle) utilsToggle.addEventListener('change', filterApps);
 });
