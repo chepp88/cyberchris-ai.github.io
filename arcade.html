@@ -3,174 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcade_Terminal | CyberSolutionsOhio</title>
+    <title>Arcade_Terminal_V4 | CyberSolutionsOhio</title>
     
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Share+Tech_Mono&family=Rajdhani:wght@300;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         :root { --neon-cyan: #00ffff; --neon-magenta: #ff00ff; --neon-yellow: #ffff00; --neon-green: #00ff00; }
         body { background: #00050a; color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
 
-        /* CRT Scanline Overlay */
-        .arcade-screen { position: relative; background: #000; overflow: hidden; }
-        .arcade-screen::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            z-index: 10;
-            background-size: 100% 3px, 2px 100%;
-            pointer-events: none;
+        /* Tactical Grid */
+        .arcade-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 15px;
+            padding: 20px;
         }
 
-        /* Cabinet Styling */
-        .cabinet-card {
-            background: rgba(10, 20, 40, 0.8);
+        /* Mini-Cabinet Styling */
+        .mini-cabinet {
+            background: rgba(10, 20, 40, 0.6);
             border: 1px solid rgba(0, 255, 255, 0.1);
-            transition: 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+            transition: all 0.3s ease;
+            position: relative;
             text-decoration: none !important;
         }
-        .cabinet-card:hover {
+        .mini-cabinet:hover {
             border-color: var(--neon-cyan);
-            transform: translateY(-8px);
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.15);
+            background: rgba(0, 255, 255, 0.05);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.1);
         }
 
-        .cabinet-header {
-            padding: 6px 12px;
-            font-family: 'Orbitron';
-            font-size: 9px;
-            letter-spacing: 2px;
-            display: flex;
-            justify-content: space-between;
-            background: rgba(255,255,255,0.05);
+        .node-id { font-family: 'Share Tech Mono'; font-size: 9px; color: #555; }
+        .arcade-icon { font-size: 2rem; margin: 15px 0; transition: transform 0.3s ease; }
+        .mini-cabinet:hover .arcade-icon { transform: scale(1.2) rotate(5deg); }
+
+        /* Sector Color Coding */
+        .sector-combat { border-top: 2px solid var(--neon-magenta); }
+        .sector-logic { border-top: 2px solid var(--neon-yellow); }
+        .sector-physics { border-top: 2px solid var(--neon-cyan); }
+        .sector-util { border-top: 2px solid var(--neon-green); }
+
+        /* CRT Overlay */
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px; z-index: 50; pointer-events: none; opacity: 0.3;
         }
-
-        /* Status Indicators */
-        .diff-bar { height: 4px; width: 10px; background: #222; display: inline-block; margin-right: 2px; border-radius: 1px; }
-        .active-cyan { background: var(--neon-cyan); box-shadow: 0 0 5px var(--neon-cyan); }
-        .active-mag { background: var(--neon-magenta); box-shadow: 0 0 5px var(--neon-magenta); }
-        .active-yell { background: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); }
-
-        .glitch-text { font-family: 'Orbitron'; text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="bg-[#00050a]">
+    <div class="scanlines"></div>
 
-    <nav class="p-6 border-b border-cyan-900/30 bg-black/40 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="index.html" class="glitch-text text-xl text-white">CYBER<span class="text-cyan-400">SOLUTIONS</span></a>
-            <div class="flex gap-6 font-['Share_Tech_Mono'] text-[11px] uppercase tracking-widest">
-                <a href="apps.html" class="text-gray-400 hover:text-cyan-400 transition-colors">Apps</a>
-                <a href="portfolio.html" class="text-gray-400 hover:text-cyan-400 transition-colors">Portfolio</a>
-                <a href="arcade.html" class="text-cyan-400 border-b border-cyan-400">Arcade</a>
-            </div>
+    <header class="p-8 border-b border-cyan-900/30 bg-black/40 text-center">
+        <h1 class="font-['Orbitron'] text-4xl font-black tracking-widest uppercase">
+            Simulation<span class="text-cyan-400">_Floor</span>
+        </h1>
+        <div class="font-['Share_Tech_Mono'] text-[10px] text-cyan-700 mt-2 tracking-[8px]">
+            TOTAL_NODES: 20 // SYSTEM_STATUS: STABLE
         </div>
-    </nav>
-
-    <header class="py-12 text-center relative">
-        <div class="absolute inset-0 opacity-10 pointer-events-none font-mono text-[150px] overflow-hidden select-none">ARCADE_TERMINAL_V4</div>
-        <h1 class="font-['Orbitron'] text-5xl font-black mb-2">NEURAL_SIM_FLOOR</h1>
-        <p class="font-['Share_Tech_Mono'] text-cyan-500 text-xs tracking-[6px] uppercase">Select Node to Initialize Simulation</p>
     </header>
 
-    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-
-        <a href="3d-pong.html" class="cabinet-card group">
-            <div class="cabinet-header text-cyan-400"><span>NODE_01</span><span>PHYSICS_ENGINE</span></div>
-            <div class="arcade-screen aspect-video flex items-center justify-center">
-                <span class="text-5xl group-hover:scale-125 transition-transform duration-500">🏓</span>
+    <div class="max-w-[1600px] mx-auto">
+        <div class="arcade-grid" id="main-floor">
             </div>
-            <div class="p-5">
-                <h3 class="font-['Orbitron'] text-lg mb-4">NEON_PONG_3D</h3>
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] text-gray-500 tracking-widest">COMPLEXITY</span>
-                    <div><div class="diff-bar active-cyan"></div><div class="diff-bar active-cyan"></div><div class="diff-bar"></div><div class="diff-bar"></div></div>
+    </div>
+
+    <script>
+        const nodes = [
+            { id: "01", name: "3D_PONG", icon: "🏓", sector: "physics", link: "3d-pong.html" },
+            { id: "02", name: "ASTEROIDS", icon: "🚀", sector: "combat", link: "3d-asteroid-field.html" },
+            { id: "03", name: "SOLITAIRE", icon: "🃏", sector: "logic", link: "solitaire.html" },
+            { id: "04", name: "MAZE_RUNNER", icon: "🌀", sector: "physics", link: "Momentum-runner.html" },
+            { id: "05", name: "CITY_BUILD", icon: "🏙️", sector: "util", link: "city-builder.html" },
+            { id: "06", name: "DNA_VIS", icon: "🧬", sector: "util", link: "dna.html" },
+            { id: "07", name: "SOLAR_SYS", icon: "☀️", sector: "util", link: "solar.html" },
+            { id: "08", name: "VAULT_SEC", icon: "🔐", sector: "combat", link: "vault.html" },
+            { id: "09", name: "ZEN_GARDEN", icon: "🎍", sector: "logic", link: "zengarden.html" },
+            { id: "10", name: "BILLIARDS", icon: "🎱", sector: "physics", link: "billiards.html" },
+            { id: "11", name: "BLOCK_BREAK", icon: "🧱", sector: "physics", link: "breakout.html" },
+            { id: "12", name: "HEX_GLITCH", icon: "👾", sector: "combat", link: "glitch.html" },
+            { id: "13", name: "DATA_STRE", icon: "📉", sector: "util", link: "datastream.html" },
+            { id: "14", name: "NEURAL_NET", icon: "🧠", sector: "logic", link: "neural.html" },
+            { id: "15", name: "VOID_WALK", icon: "🚶", sector: "physics", link: "voidwalker.html" },
+            { id: "16", name: "TETRA_LOGIC", icon: "🔳", sector: "logic", link: "tetra.html" },
+            { id: "17", name: "MATRIX_RAIN", icon: "🌧️", sector: "util", link: "matrix.html" },
+            { id: "18", name: "CORE_MELT", icon: "☢️", sector: "combat", link: "coremelt.html" },
+            { id: "19", name: "ORBIT_SIM", icon: "🛰️", sector: "physics", link: "orbit.html" },
+            { id: "20", name: "ROOT_ACCESS", icon: "⌨️", sector: "combat", link: "root.html" }
+        ];
+
+        const floor = document.getElementById('main-floor');
+
+        nodes.forEach(node => {
+            const card = document.createElement('a');
+            card.href = node.link;
+            card.className = `mini-cabinet sector-${node.sector} p-4 flex flex-col items-center text-center`;
+            card.innerHTML = `
+                <div class="w-full flex justify-between node-id">
+                    <span>NODE_${node.id}</span>
+                    <span>${node.sector.toUpperCase()}</span>
                 </div>
-            </div>
-        </a>
-
-        <a href="3d-asteroid-field.html" class="cabinet-card group">
-            <div class="cabinet-header text-fuchsia-400" style="border-bottom: 1px solid rgba(255,0,255,0.2)"><span>NODE_02</span><span>COMBAT_ARRAY</span></div>
-            <div class="arcade-screen aspect-video flex items-center justify-center">
-                <span class="text-5xl group-hover:rotate-12 transition-transform duration-500">🚀</span>
-            </div>
-            <div class="p-5">
-                <h3 class="font-['Orbitron'] text-lg mb-4">ASTEROID_STORM</h3>
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] text-gray-500 tracking-widest">COMPLEXITY</span>
-                    <div><div class="diff-bar active-mag"></div><div class="diff-bar active-mag"></div><div class="diff-bar active-mag"></div><div class="diff-bar active-mag"></div></div>
+                <div class="arcade-icon">${node.icon}</div>
+                <div class="font-['Orbitron'] text-sm tracking-tighter text-white group-hover:text-cyan-400">
+                    ${node.name}
                 </div>
-            </div>
-        </a>
-
-        <a href="solitaire.html" class="cabinet-card group">
-            <div class="cabinet-header text-yellow-400" style="border-bottom: 1px solid rgba(255,255,0,0.2)"><span>NODE_03</span><span>LOGIC_CORE</span></div>
-            <div class="arcade-screen aspect-video flex items-center justify-center">
-                <span class="text-5xl group-hover:scale-90 transition-transform duration-500">🃏</span>
-            </div>
-            <div class="p-5">
-                <h3 class="font-['Orbitron'] text-lg mb-4">3D_SOLITAIRE</h3>
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] text-gray-500 tracking-widest">COMPLEXITY</span>
-                    <div><div class="diff-bar active-yell"></div><div class="diff-bar active-yell"></div><div class="diff-bar"></div><div class="diff-bar"></div></div>
-                </div>
-            </div>
-        </a>
-
-        <a href="Momentum-runner.html" class="cabinet-card group">
-            <div class="cabinet-header text-green-400" style="border-bottom: 1px solid rgba(0,255,0,0.2)"><span>NODE_04</span><span>NAVIGATION</span></div>
-            <div class="arcade-screen aspect-video flex items-center justify-center">
-                <span class="text-5xl group-hover:translate-x-4 transition-transform duration-700">🌀</span>
-            </div>
-            <div class="p-5">
-                <h3 class="font-['Orbitron'] text-lg mb-4">MAZE_RUNNER</h3>
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] text-gray-500 tracking-widest">COMPLEXITY</span>
-                    <div><div class="diff-bar active-cyan"></div><div class="diff-bar active-cyan"></div><div class="diff-bar active-cyan"></div><div class="diff-bar"></div></div>
-                </div>
-            </div>
-        </a>
-
-        <a href="city-builder.html" class="cabinet-card group">
-            <div class="cabinet-header text-blue-400"><span>NODE_05</span><span>URBAN_SIM</span></div>
-            <div class="arcade-screen aspect-video flex items-center justify-center">
-                <span class="text-5xl group-hover:-translate-y-2 transition-transform duration-500">🏙️</span>
-            </div>
-            <div class="p-5">
-                <h3 class="font-['Orbitron'] text-lg mb-4">NEON_ARCHITECT</h3>
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] text-gray-500 tracking-widest">COMPLEXITY</span>
-                    <div><div class="diff-bar active-cyan"></div><div class="diff-bar active-cyan"></div><div class="diff-bar active-cyan"></div><div class="diff-bar active-cyan"></div></div>
-                </div>
-            </div>
-        </a>
-
-        <a href="dna.html" class="cabinet-card group">
-            <div class="cabinet-header text-fuchsia-500"><span>NODE_06</span><span>BIOLOGIC</span></div>
-            <div class="arcade-screen aspect-video flex items-center justify-center">
-                <span class="text-5xl group-hover:rotate-180 transition-transform duration-1000">🧬</span>
-            </div>
-            <div class="p-5">
-                <h3 class="font-['Orbitron'] text-lg mb-4">GENOME_VIEWER</h3>
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] text-gray-500 tracking-widest">COMPLEXITY</span>
-                    <div><div class="diff-bar active-mag"></div><div class="diff-bar active-mag"></div><div class="diff-bar"></div><div class="diff-bar"></div></div>
-                </div>
-            </div>
-        </a>
-
-    </main>
-
-    <footer class="mt-auto p-12 border-t border-cyan-900/20 bg-black text-center">
-        <div class="font-['Share_Tech_Mono'] text-[10px] text-gray-600 tracking-[5px] uppercase">
-            System_Floor_Status: Nominal // All_Nodes_Active
-        </div>
-    </footer>
-
+                <div class="mt-3 w-full bg-white/5 h-[1px]"></div>
+                <div class="mt-2 text-[8px] text-gray-500 font-['Share_Tech_Mono'] uppercase">Initialize_Sequence</div>
+            `;
+            floor.appendChild(card);
+        });
+    </script>
 </body>
 </html>
