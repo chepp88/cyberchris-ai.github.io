@@ -61,6 +61,11 @@
         .stat-line { margin-bottom: 5px; }
         .stat-line span { color: var(--neon-cyan); font-weight: bold; }
 
+        /* Navigation */
+        #nav-menu {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+        }
+
         /* Controls Hint */
         #interaction-hint {
             position: absolute; bottom: 30px; right: 30px; padding: 10px 20px;
@@ -69,7 +74,6 @@
 
         canvas { display: block; }
     </style>
-    <!-- Load Three.js and Cannon.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
 </head>
@@ -103,13 +107,16 @@
             <div class="stat-line">GRAVITY: <span id="grav-status">-9.82 m/s²</span></div>
         </div>
 
+        <div id="nav-menu">
+            <button class="action-btn glass-panel" onclick="window.location.href='../index.html'">Main Menu</button>
+        </div>
+
         <div id="interaction-hint" class="glass-panel">
             L-CLICK & DRAG TO THROW &bull; RIGHT-CLICK TO ORBIT
         </div>
     </div>
 
     <script>
-        // --- PHYSICS & VISUAL GLOBALS ---
         let world, scene, camera, renderer, clock;
         let bodies = [], meshes = [];
         let mouse = new THREE.Vector2(), raycaster = new THREE.Raycaster();
@@ -120,13 +127,11 @@
         animate();
 
         function init() {
-            // Cannon.js Physics World
             world = new CANNON.World();
             world.gravity.set(0, gravityY, 0);
             world.broadphase = new CANNON.NaiveBroadphase();
             world.solver.iterations = 10;
 
-            // Three.js Scene
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x020205);
             scene.fog = new THREE.FogExp2(0x020205, 0.002);
@@ -142,7 +147,6 @@
 
             clock = new THREE.Clock();
 
-            // Lights
             scene.add(new THREE.AmbientLight(0x404040));
             const spotlight = new THREE.SpotLight(0x00ffff, 1);
             spotlight.position.set(0, 200, 100);
@@ -151,7 +155,6 @@
 
             createRoom();
 
-            // Event Listeners
             window.addEventListener('resize', onWindowResize);
             window.addEventListener('mousedown', onMouseDown);
             window.addEventListener('mousemove', onMouseMove);
@@ -159,25 +162,17 @@
         }
 
         function createRoom() {
-            // Physical Ground
             const groundMat = new CANNON.Material("groundMaterial");
             const groundBody = new CANNON.Body({ mass: 0, material: groundMat });
             groundBody.addShape(new CANNON.Plane());
             groundBody.quaternion.setFromAxisAngle(new CANNON.Vector3(1, 0, 0), -Math.PI / 2);
             world.addBody(groundBody);
 
-            // Visual Grid Ground
             const grid = new THREE.GridHelper(400, 20, 0x00ffff, 0x111122);
             scene.add(grid);
 
-            // Invisible Walls to keep objects in view
             const wallSize = 200;
-            const wallPositions = [
-                [0, 100, -100, 0, 0],   // Back
-                [100, 100, 0, 0, -Math.PI/2], // Right
-                [-100, 100, 0, 0, Math.PI/2],  // Left
-                [0, 100, 100, 0, Math.PI]    // Front (behind camera)
-            ];
+            const wallPositions = [[0, 100, -100, 0, 0], [100, 100, 0, 0, -Math.PI/2], [-100, 100, 0, 0, Math.PI/2], [0, 100, 100, 0, Math.PI]];
 
             wallPositions.forEach(p => {
                 const shape = new CANNON.Box(new CANNON.Vector3(wallSize, wallSize, 5));
@@ -188,7 +183,6 @@
                 world.addBody(body);
             });
 
-            // Ceiling
             const ceilBody = new CANNON.Body({ mass: 0 });
             ceilBody.addShape(new CANNON.Plane());
             ceilBody.position.set(0, 200, 0);
@@ -215,14 +209,8 @@
                     geo = new THREE.CylinderGeometry(size, size, size * 2, 16);
                     break;
                 case 'tetra':
-                    shape = new CANNON.ConvexPolyhedron([
-                        new CANNON.Vector3(0, size, 0),
-                        new CANNON.Vector3(-size, -size, size),
-                        new CANNON.Vector3(size, -size, size),
-                        new CANNON.Vector3(0, -size, -size)
-                    ], [
-                        [0, 1, 2], [0, 2, 3], [0, 3, 1], [1, 3, 2]
-                    ]);
+                    // Use a Box shape for physics hit-box to ensure stability
+                    shape = new CANNON.Box(new CANNON.Vector3(size/2, size/2, size/2));
                     geo = new THREE.TetrahedronGeometry(size);
                     break;
             }
@@ -235,12 +223,7 @@
             body.angularDamping = 0.5;
             world.addBody(body);
 
-            const mat = new THREE.MeshStandardMaterial({
-                color: color,
-                emissive: color,
-                emissiveIntensity: 0.4,
-                wireframe: true
-            });
+            const mat = new THREE.MeshStandardMaterial({ color: color, emissive: color, emissiveIntensity: 0.4, wireframe: true });
             const mesh = new THREE.Mesh(geo, mat);
             scene.add(mesh);
 
@@ -250,20 +233,16 @@
         }
 
         function onMouseDown(e) {
-            if (e.button !== 0) return; // Only left click
+            if (e.button !== 0) return;
             mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-
             raycaster.setFromCamera(mouse, camera);
             const intersects = raycaster.intersectObjects(meshes);
-
             if (intersects.length > 0) {
                 const mesh = intersects[0].object;
                 const index = meshes.indexOf(mesh);
                 dragBody = bodies[index];
-                dragBody.type = CANNON.Body.KINEMATIC; // Pause physics on this body
-
-                // Setup drag plane
+                dragBody.type = CANNON.Body.KINEMATIC;
                 dragPlane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()).negate(), mesh.position);
             }
         }
@@ -272,12 +251,10 @@
             if (!dragBody) return;
             mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-
             raycaster.setFromCamera(mouse, camera);
             raycaster.ray.intersectPlane(dragPlane, dragPoint);
-            
             dragBody.position.copy(dragPoint);
-            dragBody.velocity.set(0, 0, 0); // No velocity while dragging
+            dragBody.velocity.set(0, 0, 0);
         }
 
         function onMouseUp() {
@@ -291,39 +268,25 @@
             gravityY *= -1;
             world.gravity.set(0, gravityY, 0);
             document.getElementById('grav-status').innerText = `${gravityY.toFixed(2)} m/s²`;
-            document.getElementById('grav-status').parentElement.classList.toggle('magenta');
         }
 
         function clearScene() {
             bodies.forEach(b => world.remove(b));
             meshes.forEach(m => scene.remove(m));
-            bodies = [];
-            meshes = [];
+            bodies = []; meshes = [];
             updateStats();
         }
 
-        function updateStats() {
-            document.getElementById('body-count').innerText = bodies.length;
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
+        function updateStats() { document.getElementById('body-count').innerText = bodies.length; }
+        function onWindowResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
 
         function animate() {
             requestAnimationFrame(animate);
-            const delta = Math.min(clock.getDelta(), 0.1);
-
-            world.step(1/60, delta);
-
-            // Sync Visuals with Physics
+            world.step(1/60, Math.min(clock.getDelta(), 0.1));
             for (let i = 0; i < bodies.length; i++) {
                 meshes[i].position.copy(bodies[i].position);
                 meshes[i].quaternion.copy(bodies[i].quaternion);
             }
-
             renderer.render(scene, camera);
         }
     </script>
