@@ -1,0 +1,53 @@
+const fs = require('fs');
+
+// 1. Load the Master index.html
+const indexSource = fs.readFileSync('index.html', 'utf8');
+
+// 2. Split the index using the markers we added
+const parts = indexSource.split(/|/);
+
+if (parts.length < 3) {
+    console.log("❌ Error: Markers not found!");
+    console.log("Check your index.html for: and ");
+    process.exit();
+}
+
+const header = parts[0]; 
+const footer = parts[2]; 
+
+// 3. List the pages to create
+const pages = [
+    {
+        filename: 'launchpad.html',
+        title: 'Launchpad | CyberSolutionsOhio',
+        body: `
+        <section class="content-section">
+            <div class="page-header">
+                <h2>Digital Arsenal</h2>
+                <p>System tools and apps synced with your global theme.</p>
+            </div>
+            <div class="features-grid">
+                <article class="feature-item">
+                    <h3>Terminal OS</h3>
+                    <p>Web-based command interface.</p>
+                    <button class="cta-button">Launch</button>
+                </article>
+            </div>
+        </section>`
+    },
+    {
+        filename: 'portfolio.html',
+        title: 'Portfolio | CyberSolutionsOhio',
+        body: `<section class="content-section"><h1>Project Records</h1><p>Database Synced.</p></section>`
+    }
+];
+
+// 4. Run the Mirror Process
+pages.forEach(page => {
+    // This part ensures the theme button works by copying the scripts too!
+    let finalHtml = header.replace(/<title>.*<\/title>/, `<title>${page.title}</title>`);
+    finalHtml += page.body + footer;
+
+    fs.writeFileSync(page.filename, finalHtml);
+    console.log(`🚀 Successfully Built: ${page.filename}`);
+});

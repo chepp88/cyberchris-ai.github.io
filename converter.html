@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Converter | CyberSolutionsOhio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .converter-card {
+            background: #000; border: 1px solid #333; padding: 2rem; border-radius: 6px; 
+            max-width: 600px; margin: 0 auto; font-family: monospace;
+        }
+        .converter-group { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .converter-group input, .converter-group select {
+            background: #111; border: 1px solid #444; color: white; padding: 10px; 
+            font-family: monospace; font-size: 1.1rem; flex: 1;
+        }
+        .converter-group input:focus, .converter-group select:focus {
+            border-color: var(--cyan); outline: none;
+        }
+        .result-display {
+            font-size: 2rem; color: var(--cyan); text-align: center; margin-top: 20px;
+            text-shadow: 0 0 10px rgba(0, 245, 212, 0.3);
+        }
+        .label { color: #888; margin-bottom: 5px; display: block; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">CyberSolutionsOhio</a>
+            <form class="search-form" action="https://www.google.com/search" method="get" target="_blank">
+                <input type="text" name="q" placeholder="Search...">
+                <button type="submit">Search</button>
+            </form>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="converter.html">Converter</a></li>
+                <li><a href="apps.html">Apps</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                
+                <li class="theme-menu-container">
+                    <button id="theme-menu-trigger" class="nav-theme-btn">THEMES</button>
+                    <div id="theme-options" class="theme-popup">
+                        <button onclick="setTheme('default')">Cyberpunk</button>
+                        <button onclick="setTheme('matrix')">Matrix</button>
+                        <button onclick="setTheme('sunset')">Sunset</button>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="content-section">
+            <div class="page-header">
+                <h2>Data Unit Converter</h2>
+            </div>
+            
+            <div class="converter-card">
+                <h3>> DIGITAL_STORAGE_CALCULATOR</h3>
+                <p style="color: #666; margin-bottom: 20px;">Convert between Bytes, KB, MB, GB, TB, and PB.</p>
+                
+                <div>
+                    <span class="label">Input Value:</span>
+                    <div class="converter-group">
+                        <input type="number" id="inputValue" placeholder="0" value="1">
+                        <select id="inputUnit">
+                            <option value="1">Bytes (B)</option>
+                            <option value="1024">Kilobytes (KB)</option>
+                            <option value="1048576">Megabytes (MB)</option>
+                            <option value="1073741824" selected>Gigabytes (GB)</option>
+                            <option value="1099511627776">Terabytes (TB)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin: 10px 0; color: var(--magenta);">⬇ CONVERTS TO ⬇</div>
+
+                <div>
+                    <span class="label">Target Unit:</span>
+                    <div class="converter-group">
+                        <select id="outputUnit">
+                            <option value="1">Bytes (B)</option>
+                            <option value="1024">Kilobytes (KB)</option>
+                            <option value="1048576" selected>Megabytes (MB)</option>
+                            <option value="1073741824">Gigabytes (GB)</option>
+                            <option value="1099511627776">Terabytes (TB)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="result-display" id="resultText">1024 MB</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 CyberSolutionsOhio. All Systems Nominal.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        // --- Converter Logic ---
+        const inputVal = document.getElementById('inputValue');
+        const inputUnit = document.getElementById('inputUnit');
+        const outputUnit = document.getElementById('outputUnit');
+        const resultText = document.getElementById('resultText');
+
+        function calculate() {
+            const val = parseFloat(inputVal.value);
+            if(isNaN(val)) {
+                resultText.innerText = "Error";
+                return;
+            }
+            
+            // Convert input to Bytes first
+            const valueInBytes = val * parseFloat(inputUnit.value);
+            
+            // Convert Bytes to target output
+            const result = valueInBytes / parseFloat(outputUnit.value);
+            
+            // Format result nicely
+            let formatted = result;
+            if (result % 1 !== 0) {
+                formatted = result.toFixed(2);
+            }
+            
+            // Get label text
+            const unitLabel = outputUnit.options[outputUnit.selectedIndex].text.split(' ')[1];
+            
+            resultText.innerText = `${formatted} ${unitLabel}`;
+        }
+
+        // Listen for changes
+        inputVal.addEventListener('input', calculate);
+        inputUnit.addEventListener('change', calculate);
+        outputUnit.addEventListener('change', calculate);
+
+        // --- Theme Logic ---
+        const themeBtn = document.getElementById('theme-menu-trigger');
+        const themePopup = document.getElementById('theme-options');
+
+        if (themeBtn && themePopup) {
+            themeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = (themePopup.style.display === 'none' || themePopup.style.display === '');
+                themePopup.style.display = isHidden ? 'flex' : 'none';
+            });
+            document.addEventListener('click', (e) => {
+                if (!themeBtn.contains(e.target) && !themePopup.contains(e.target)) {
+                    themePopup.style.display = 'none';
+                }
+            });
+        }
+
+        function setTheme(theme) {
+            const root = document.documentElement;
+            if (theme === 'matrix') {
+                root.style.setProperty('--cyan', '#00ff00');
+                root.style.setProperty('--magenta', '#003300');
+            } else if (theme === 'sunset') {
+                root.style.setProperty('--cyan', '#ffcc00');
+                root.style.setProperty('--magenta', '#ff5500');
+            } else {
+                root.style.setProperty('--cyan', '#00f5d4');
+                root.style.setProperty('--magenta', '#ff00f5');
+            }
+            if(themePopup) themePopup.style.display = 'none';
+        }
+    </script>
+</body>
+</html>            outline: none;
+            box-shadow: 0 0 10px var(--cyan);
+        }
+        #result-display {
+            font-size: 24px;
+            color: var(--magenta);
+            text-shadow: 0 0 10px var(--magenta);
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px dashed var(--magenta);
+            background: rgba(0,0,0,0.3);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">CyberSolutionsOhio</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="converter.html" class="active">Converter</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content-card converter-container">
+            <h1>Unit Converter</h1>
+            
+            <div class="input-group">
+                <label>Input Value</label>
+                <input type="number" id="inputValue" placeholder="Enter number..." step="any">
+            </div>
+
+            <div class="input-group">
+                <label>From Unit</label>
+                <select id="convertFrom">
+                    <optgroup label="Length">
+                        <option value="m">Meters (m)</option>
+                        <option value="ft">Feet (ft)</option>
+                        <option value="km">Kilometers (km)</option>
+                        <option value="mi">Miles (mi)</option>
+                    </optgroup>
+                    <optgroup label="Weight">
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="lbs">Pounds (lbs)</option>
+                        <option value="g">Grams (g)</option>
+                    </optgroup>
+                    <optgroup label="Data (Cyber)">
+                        <option value="MB">Megabytes (MB)</option>
+                        <option value="GB">Gigabytes (GB)</option>
+                        <option value="TB">Terabytes (TB)</option>
+                        <option value="PB">Petabytes (PB)</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>To Unit</label>
+                <select id="convertTo">
+                    <optgroup label="Length">
+                        <option value="m">Meters (m)</option>
+                        <option value="ft">Feet (ft)</option>
+                        <option value="km">Kilometers (km)</option>
+                        <option value="mi">Miles (mi)</option>
+                    </optgroup>
+                    <optgroup label="Weight">
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="lbs">Pounds (lbs)</option>
+                        <option value="g">Grams (g)</option>
+                    </optgroup>
+                    <optgroup label="Data (Cyber)">
+                        <option value="MB">Megabytes (MB)</option>
+                        <option value="GB">Gigabytes (GB)</option>
+                        <option value="TB">Terabytes (TB)</option>
+                        <option value="PB">Petabytes (PB)</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <button class="cta-button" onclick="convert()">Calculate</button>
+            <div id="result-display">Result: --</div>
+        </div>
+    </main>
+<button id="theme-toggle-button">Change Theme</button>
+    <script>
+        // 1. Define the Logic Database
+        // 'rate' is the conversion factor to the BASE unit (Meter, Kg, or MB)
+        const units = {
+            // Length (Base: Meter)
+            'm':  { type: 'length', rate: 1 },
+            'km': { type: 'length', rate: 1000 },
+            'ft': { type: 'length', rate: 0.3048 },
+            'mi': { type: 'length', rate: 1609.34 },
+
+            // Weight (Base: Kilogram)
+            'kg': { type: 'weight', rate: 1 },
+            'g':  { type: 'weight', rate: 0.001 },
+            'lbs':{ type: 'weight', rate: 0.453592 },
+
+            // Data (Base: Megabyte)
+            'MB': { type: 'data', rate: 1 },
+            'GB': { type: 'data', rate: 1024 },
+            'TB': { type: 'data', rate: 1048576 },
+            'PB': { type: 'data', rate: 1073741824 }
+        };
+
+        function convert() {
+            // 2. Get Elements
+            const val = parseFloat(document.getElementById('inputValue').value);
+            const fromSelect = document.getElementById('convertFrom');
+            const toSelect = document.getElementById('convertTo');
+            const resultDisplay = document.getElementById('result-display');
+            
+            const fromUnit = fromSelect.value;
+            const toUnit = toSelect.value;
+
+            // 3. Validation: Is it a number?
+            if (isNaN(val)) {
+                resultDisplay.innerHTML = "Result: <span style='color: red'>Please enter a number</span>";
+                return;
+            }
+
+            const fromData = units[fromUnit];
+            const toData = units[toUnit];
+
+            // 4. Logic: Are types compatible? (e.g., prevent Length -> Weight)
+            if (fromData.type !== toData.type) {
+                resultDisplay.innerHTML = `Result: <span style='color: red'>Cannot convert ${fromData.type} to ${toData.type}</span>`;
+                return;
+            }
+
+            // 5. The Math: (Value * FromRate) / ToRate
+            const rawResult = (val * fromData.rate) / toData.rate;
+
+            // Clean up the number (max 6 decimal places)
+            const cleanResult = parseFloat(rawResult.toFixed(6));
+
+            // 6. Display Result
+            resultDisplay.innerHTML = `Result: <span style='color: var(--cyan)'>${cleanResult} ${toUnit}</span>`;
+        } 
+        <button id="theme-toggle-button" class="cta-button">Change Theme</button>
+    </script>
+</body>
+</html>

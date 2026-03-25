@@ -1,0 +1,5 @@
+git pull origin main
+git add .
+git commit -m "Site update: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+git push origin main
+Write-Host "Files successfully uploaded!" -ForegroundColor Green

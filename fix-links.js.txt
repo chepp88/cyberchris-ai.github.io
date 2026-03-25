@@ -1,0 +1,28 @@
+const fs = require('fs');
+const path = require('path');
+
+const toolsDir = path.join(__dirname, 'projects', 'tools');
+
+if (fs.existsSync(toolsDir)) {
+    const files = fs.readdirSync(toolsDir);
+
+    files.forEach(file => {
+        if (file.endsWith('.html')) {
+            const filePath = path.join(toolsDir, file);
+            let content = fs.readFileSync(filePath, 'utf8');
+
+            // 1. Fix CSS/JS/Img links (adding ../../ to go up to root)
+            content = content.replace(/href="css\//g, 'href="../../css/');
+            content = content.replace(/src="js\//g, 'src="../../js/');
+            content = content.replace(/src="img\//g, 'src="../../img/');
+
+            // 2. Fix the Home/Logo link
+            content = content.replace(/href="index\.html"/g, 'href="../../index.html"');
+
+            fs.writeFileSync(filePath, content);
+            console.log(`✅ Fixed links in: ${file}`);
+        }
+    });
+} else {
+    console.log("❌ Could not find the projects/tools folder.");
+}

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Navigate to your project directory (optional if running from within)
+# cd /path/to/your/repo
+
+# Check status
+git status
+
+# Add all changes
+git add .
+
+# Prompt for a commit message
+echo "Enter commit message:"
+read commit_msg
+
+# Commit changes
+git commit -m "$commit_msg"
+
+# Push to the main branch
+git push origin main
+
+echo "Push complete!"

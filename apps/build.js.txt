@@ -1,0 +1,19 @@
+const fs = require('fs');
+const path = require('path');
+
+const layout = fs.readFileSync('layout.html', 'utf8');
+const pagesDir = './pages';
+
+// Get all files in your pages folder
+fs.readdirSync(pagesDir).forEach(file => {
+    const pageContent = fs.readFileSync(path.join(pagesDir, file), 'utf8');
+    
+    // Inject content into the layout
+    const finalHtml = layout.replace('{{CONTENT}}', pageContent);
+    
+    // Save the file (e.g., index.txt becomes index.html)
+    const fileName = file.replace('.txt', '.html');
+    fs.writeFileSync(fileName, finalHtml);
+    
+    console.log(`Successfully synced: ${fileName}`);
+});
