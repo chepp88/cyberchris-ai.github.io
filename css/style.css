@@ -212,3 +212,22 @@ header {
 .search-form button {
     border-radius: 0 4px 4px 0;
 }
+:root {
+    --cyan: #00f5d4;
+    --magenta: #ff00f5;
+    --bg-dark: #0d0221;
+    --text-color: #ffffff;
+}
+
+body.light-mode {
+    --bg-dark: #ffffff;
+    --text-color: #1a1a1a;
+    --cyan: #ff4500; /* Solar Orange */
+    --magenta: #cc3700;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-color);
+    transition: background 0.3s ease, color 0.3s ease;
+}
