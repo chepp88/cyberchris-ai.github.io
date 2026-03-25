@@ -230,14 +230,7 @@ footer {
     .trust-logos { gap: 30px; }
     .logo-container { width: 120px; }
 }
-.trust-logos {
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Vertically centers logos of different heights */
-    flex-wrap: wrap;
-    gap: 40px; 
-    padding: 20px;
-}
+
 
 .logo-container {
     display: flex;
