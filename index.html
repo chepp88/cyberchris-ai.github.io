@@ -9,175 +9,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-/* =============================================
-   1. VARIABLES & THEMES
-   ============================================= */
-:root {
-    --bg-color: #0d0221;
-    --card-bg: rgba(255, 255, 255, 0.05);
-    --text-color: #ccd6f6;
-    --white: #e6f1ff;
-    --cyan: #00f5d4;
-    --magenta: #ff00f5;
-    --grid-color: rgba(0, 245, 212, 0.2);
-    --header-bg: rgba(13, 2, 33, 0.9);
-    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">CyberSolutionsOhio</a>
+            
+            <form class="search-form" action="https://www.google.com/search" method="get" target="_blank">
+                <input type="text" name="q" placeholder="Search the web...">
+                <button type="submit">Search</button>
+            </form>
 
-body.light-mode {
-    --bg-color: #ffffff;
-    --card-bg: rgba(0, 0, 0, 0.05);
-    --text-color: #1a1a1a;
-    --white: #000000;
-    --cyan: #ff4500; /* Solar Orange */
-    --magenta: #cc3700; 
-    --grid-color: rgba(255, 69, 0, 0.1);
-    --header-bg: rgba(255, 255, 255, 0.9);
-}
+            <ul class="nav-links">
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="apps.html">Apps & Demos</a></li>
+                <li><a href="arcade.html">Arcade</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="launchpad.html">Launchpad</a></li>
+            </ul>
 
-/* =============================================
-   2. GLOBAL & LAYOUT
-   ============================================= */
-body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    transition: background 0.3s, color 0.3s;
-    line-height: 1.6;
-}
-
-/* =============================================
-   3. HEADER & NAVIGATION (FIXED)
-   ============================================= */
-header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    background: var(--header-bg);
-    backdrop-filter: blur(12px);
-    border-bottom: 2px solid var(--cyan);
-    box-shadow: 0 0 15px var(--cyan);
-    box-sizing: border-box;
-    padding: 10px 5%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Horizontal Nav List */
-nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 1.5rem;
-    align-items: center;
-}
-
-nav a {
-    text-decoration: none;
-    color: var(--cyan);
-    font-weight: bold;
-    font-family: 'SF Mono', monospace;
-    font-size: 0.9rem;
-    transition: var(--transition);
-}
-
-nav a:hover {
-    color: var(--white);
-    text-shadow: 0 0 8px var(--cyan);
-}
-
-/* =============================================
-   4. SEARCH & INPUTS
-   ============================================= */
-.search-form {
-    display: flex;
-    gap: 0;
-}
-
-.search-form input {
-    padding: 8px 15px;
-    border-radius: 4px 0 0 4px;
-    border: 1px solid var(--magenta);
-    background: rgba(0, 0, 0, 0.3);
-    color: white;
-    outline: none;
-}
-
-.search-form button {
-    padding: 8px 15px;
-    background: var(--cyan);
-    color: #000;
-    border: none;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    font-weight: bold;
-    transition: var(--transition);
-}
-
-.search-form button:hover {
-    filter: brightness(1.2);
-    box-shadow: 0 0 10px var(--cyan);
-}
-
-/* =============================================
-   5. DASHBOARD & GRIDS
-   ============================================= */
-.dashboard-main {
-    display: flex;
-    margin-top: 100px; /* Space for the fixed header */
-    padding: 20px 5%;
-    gap: 30px;
-}
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-/* List View Toggle Support */
-.features-grid.list-view {
-    grid-template-columns: 1fr;
-}
-
-.features-grid.list-view .feature-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-}
-
-.feature-item {
-    background: var(--card-bg);
-    border: 1px solid var(--cyan);
-    padding: 25px;
-    border-radius: 8px;
-    transition: var(--transition);
-    text-decoration: none;
-    color: inherit;
-}
-
-.feature-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px var(--cyan);
-    background: rgba(255, 255, 255, 0.1);
-}
-
-/* Hero Image Fix */
-.hero-image {
-    width: 100%;
-    max-height: 450px;
-    object-fit: cover;
-    border-bottom: 4px solid var(--cyan);
-    box-shadow: 0 0 20px var(--cyan);
-}
+            <button id="theme-toggle-button" class="cta-button">🌗 Toggle Theme</button>
+        </nav>
+    </header>
 
     <main>
-        <!-- HERO with Three.js Animated Background -->
         <section class="hero hero-two-column">
             <canvas id="hero-canvas" class="hero-canvas"></canvas>
             
@@ -204,7 +59,6 @@ nav a:hover {
             </div>
         </section>
 
-        <!-- CORE OFFERINGS -->
         <section class="content-section features">
             <div class="page-header">
                 <h2>Core Offerings</h2>
@@ -251,11 +105,6 @@ nav a:hover {
                 </article>
             </div>
         </section>
-
-        <!-- FEATURED PROJECTS -->
-        <section class="content-section featured-projects">
-            <div class="page-header">
-</section>
     </main>
 
     <footer>
@@ -270,7 +119,6 @@ nav a:hover {
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
     <script src="js/main.js"></script>
 </body>
 </html>
