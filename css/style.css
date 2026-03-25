@@ -10,7 +10,7 @@
     --magenta: #ff00f5;
     --grid-color: rgba(0, 245, 212, 0.2);
     --header-bg: rgba(13, 2, 33, 0.9);
-    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body.light-mode {
@@ -25,7 +25,7 @@ body.light-mode {
 }
 
 /* =============================================
-   2. GLOBAL & LAYOUT
+   2. GLOBAL STYLES
    ============================================= */
 body {
     background-color: var(--bg-color);
@@ -34,35 +34,33 @@ body {
     font-family: 'Inter', sans-serif;
     transition: background 0.3s, color 0.3s;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 /* =============================================
-   3. HEADER & NAVIGATION (FIXED)
+   3. FIXED HEADER & NAV
    ============================================= */
 header {
     position: fixed;
-    top: 0;
-    width: 100%;
+    top: 0; width: 100%;
     z-index: 1000;
     background: var(--header-bg);
     backdrop-filter: blur(12px);
     border-bottom: 2px solid var(--cyan);
-    box-shadow: 0 0 15px var(--cyan);
-    box-sizing: border-box;
     padding: 10px 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
 }
 
-/* Horizontal Nav List */
+.navbar { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+
 nav ul {
     display: flex;
     list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 1.5rem;
-    align-items: center;
+    gap: 20px;
+    margin: 0; padding: 0;
 }
 
 nav a {
@@ -76,68 +74,36 @@ nav a {
 
 nav a:hover {
     color: var(--white);
-    text-shadow: 0 0 8px var(--cyan);
+    text-shadow: 0 0 10px var(--cyan);
 }
 
 /* =============================================
-   4. SEARCH & INPUTS
-   ============================================= */
-.search-form {
-    display: flex;
-    gap: 0;
-}
-
-.search-form input {
-    padding: 8px 15px;
-    border-radius: 4px 0 0 4px;
-    border: 1px solid var(--magenta);
-    background: rgba(0, 0, 0, 0.3);
-    color: white;
-    outline: none;
-}
-
-.search-form button {
-    padding: 8px 15px;
-    background: var(--cyan);
-    color: #000;
-    border: none;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    font-weight: bold;
-    transition: var(--transition);
-}
-
-.search-form button:hover {
-    filter: brightness(1.2);
-    box-shadow: 0 0 10px var(--cyan);
-}
-
-/* =============================================
-   5. DASHBOARD & GRIDS
+   4. APPS & DASHBOARD LAYOUT
    ============================================= */
 .dashboard-main {
     display: flex;
-    margin-top: 100px; /* Space for the fixed header */
-    padding: 20px 5%;
+    margin-top: 100px;
+    padding: 40px 5%;
     gap: 30px;
+}
+
+.sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--cyan);
+    padding: 20px;
+    border-radius: 8px;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
 }
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-/* List View Toggle Support */
-.features-grid.list-view {
-    grid-template-columns: 1fr;
-}
-
-.features-grid.list-view .feature-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    flex-grow: 1;
 }
 
 .feature-item {
@@ -145,78 +111,27 @@ nav a:hover {
     border: 1px solid var(--cyan);
     padding: 25px;
     border-radius: 8px;
-    transition: var(--transition);
     text-decoration: none;
     color: inherit;
+    transition: var(--transition);
 }
 
 .feature-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 0 20px var(--cyan);
-    background: rgba(255, 255, 255, 0.1);
 }
 
-/* Hero Image Fix */
-.hero-image {
-    width: 100%;
-    max-height: 450px;
-    object-fit: cover;
-    border-bottom: 4px solid var(--cyan);
-    box-shadow: 0 0 20px var(--cyan);
-}
-/* Container for the whole header */
-header {
-  background-color: #1a1a2e; /* Darker navy/black for depth */
-  padding: 20px 5%;
-  border-bottom: 1px solid #333;
-}
+/* List View Override */
+.features-grid.list-view { grid-template-columns: 1fr; }
+.features-grid.list-view .feature-item { display: flex; justify-content: space-between; align-items: center; }
 
-/* Align Search and Theme Toggle on one line */
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-/* Navigation List Fix */
-nav ul {
-  display: flex;
-  justify-content: center; /* Centers your menu */
-  flex-wrap: wrap; /* Keeps it mobile-friendly */
-  gap: 20px;
-  list-style: none;
-  padding: 0;
-}
-
-/* Link Styling (Fixes the invisible purple) */
-nav ul li a {
-  text-decoration: none;
-  color: #00d4ff !important; /* Bright Cyber Blue */
-  font-weight: bold;
-  font-size: 1rem;
-  transition: color 0.3s ease;
-}
-
-nav ul li a:hover {
-  color: #ffffff !important;
-  text-shadow: 0 0 8px #00d4ff;
-}
-
-/* Search Bar Clean-up */
-.search-container input {
-  padding: 8px;
-  border-radius: 4px 0 0 4px;
-  border: 1px solid #444;
-  background: #000;
-  color: #fff;
-}
-
-.search-container button {
-  padding: 8px 15px;
-  border-radius: 0 4px 4px 0;
-  border: none;
-  background: #00d4ff;
-  color: #000;
-  cursor: pointer;
+/* Buttons */
+.cta-button {
+    background: linear-gradient(45deg, var(--cyan), var(--magenta));
+    color: #000 !important;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
 }
