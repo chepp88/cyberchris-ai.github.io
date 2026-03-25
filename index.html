@@ -6,36 +6,35 @@
     <title>CyberSolutionsOhio | Home</title>
     <meta name="description" content="CyberSolutionsOhio, led by Chris Heppard, provides agile web development, cybersecurity, and cloud solutions for humans.">
     <link rel="stylesheet" href="css/style.css">
-</head>
     <style>
-    /* Align the logo container */
-    .trust-logos {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        gap: 40px; /* Adjust spacing between logos here */
-        padding: 20px;
-    }
+        /* Alignment and sizing for the Trust Section */
+        .trust-logos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            padding: 20px;
+        }
 
-    /* Ensure logos are a consistent size and don't overflow */
-    .trust-logo {
-        max-width: 150px;
-        max-height: 80px;
-        width: auto;
-        height: auto;
-        object-fit: contain;
-        /* Optional: make them look uniform */
-        filter: grayscale(100%);
-        opacity: 0.7;
-        transition: all 0.3s ease;
-    }
+        .trust-logo {
+            max-width: 110px;
+            max-height: 50px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            filter: grayscale(100%);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
 
-    .trust-logo:hover {
-        filter: grayscale(0%);
-        opacity: 1;
-    }
-</style>
+        .trust-logo:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
 <body>
     <header>
         <nav class="navbar">
@@ -62,12 +61,12 @@
             <div class="content-card hero hero-two-column">
                 <div class="hero-left">
                     <div class="profile-picture">
-                        <img src="img/profile.jpg" alt="A photo of Chris Heppard, the founder of CyberSolutionsOhio.">
+                        <img src="img/profile.jpg" alt="Chris Heppard">
                     </div>
                 </div>
                 <div class="hero-right">
                     <h1>CyberSolutions for a Modern Ohio</h1>
-                    <p>Chris Heppard is a visionary Full-Stack Developer and Security Specialist based in Cincinnati, Ohio. With a passion for immersive web technologies and robust cyber-infrastructure, Chris founded CyberSolutions to bridge the gap between interactive 3D design and enterprise-grade security. His work transforms complex data into accessible, secure digital experiences for the modern web.</p>
+                    <p>Chris Heppard is a visionary Full-Stack Developer and Security Specialist based in Cincinnati, Ohio. With a passion for immersive web technologies and robust cyber-infrastructure, Chris founded CyberSolutions to bridge the gap between interactive 3D design and enterprise-grade security.</p>
                     <a href="apps.html" class="cta-button">View Software Suite</a>
                 </div>
             </div>
@@ -158,18 +157,6 @@
             </ul>
         </div>
     </footer>
-
-    <div id="newsletterModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Subscribe to Our Newsletter</h2>
-            <p>Stay up to date with the latest industry news and insights.</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Enter your email" required>
-                <button type="submit" class="cta-button">Subscribe</button>
-            </form>
-        </div>
-    </div>
 
     <script src="js/main.js"></script>
     <script src="js/theme.js"></script>
