@@ -164,3 +164,59 @@ nav a:hover {
     border-bottom: 4px solid var(--cyan);
     box-shadow: 0 0 20px var(--cyan);
 }
+/* Container for the whole header */
+header {
+  background-color: #1a1a2e; /* Darker navy/black for depth */
+  padding: 20px 5%;
+  border-bottom: 1px solid #333;
+}
+
+/* Align Search and Theme Toggle on one line */
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Navigation List Fix */
+nav ul {
+  display: flex;
+  justify-content: center; /* Centers your menu */
+  flex-wrap: wrap; /* Keeps it mobile-friendly */
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+/* Link Styling (Fixes the invisible purple) */
+nav ul li a {
+  text-decoration: none;
+  color: #00d4ff !important; /* Bright Cyber Blue */
+  font-weight: bold;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #ffffff !important;
+  text-shadow: 0 0 8px #00d4ff;
+}
+
+/* Search Bar Clean-up */
+.search-container input {
+  padding: 8px;
+  border-radius: 4px 0 0 4px;
+  border: 1px solid #444;
+  background: #000;
+  color: #fff;
+}
+
+.search-container button {
+  padding: 8px 15px;
+  border-radius: 0 4px 4px 0;
+  border: none;
+  background: #00d4ff;
+  color: #000;
+  cursor: pointer;
+}
