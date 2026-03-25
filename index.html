@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyberSolutionsOhio | Home</title>
-    <meta name="description" content="Chris Heppard's CyberSolutionsOhio — Full-Stack Development, 3D Interactive Experiences, Cybersecurity, and Cloud Solutions based in Cincinnati, Ohio.">
+    <meta name="description" content="Chris Heppard's CyberSolutionsOhio — Full-Stack Development, Immersive 3D Experiences, Cybersecurity & Cloud Solutions based in Cincinnati, Ohio.">
     <link rel="stylesheet" href="css/style.css">
-    <!-- Add Font Awesome for icons if you want (optional) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <header>
@@ -34,8 +33,10 @@
     </header>
 
     <main>
-        <!-- HERO SECTION - Expanded -->
+        <!-- HERO with Three.js Animated Background -->
         <section class="hero hero-two-column">
+            <canvas id="hero-canvas" class="hero-canvas"></canvas>
+            
             <div class="hero-left">
                 <div class="profile-picture">
                     <img src="img/profile.jpg" alt="Chris Heppard - Founder of CyberSolutionsOhio">
@@ -59,7 +60,7 @@
             </div>
         </section>
 
-        <!-- CORE OFFERINGS - Improved with filters & icons -->
+        <!-- CORE OFFERINGS -->
         <section class="content-section features">
             <div class="page-header">
                 <h2>Core Offerings</h2>
@@ -107,134 +108,6 @@
             </div>
         </section>
 
-        <!-- FEATURED PROJECTS - New high-impact section -->
+        <!-- FEATURED PROJECTS -->
         <section class="content-section featured-projects">
             <div class="page-header">
-                <h2>Featured Projects</h2>
-                <p>Selected from my Digital Arsenal — live 3D demos, games, and security tools you can try right now.</p>
-            </div>
-            
-            <div class="projects-grid">
-                <!-- Project 1 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="img/neon-pong.jpg" alt="Neon Pong 3D" onerror="this.src='https://via.placeholder.com/400x250/0a0a0a/00ff9f?text=Neon+Pong';">
-                    </div>
-                    <div class="project-info">
-                        <h3>Neon Pong</h3>
-                        <p class="tech">Three.js • WebGL • Real-time Physics</p>
-                        <p>Glowing 3D table tennis with smooth controls and neon aesthetics.</p>
-                        <a href="arcade.html#neon-pong" class="cta-button small">Play Now →</a>
-                    </div>
-                </div>
-
-                <!-- Project 2 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="img/3d-city-builder.jpg" alt="3D City Builder" onerror="this.src='https://via.placeholder.com/400x250/0a0a0a/00ff9f?text=City+Builder';">
-                    </div>
-                    <div class="project-info">
-                        <h3>3D City Builder</h3>
-                        <p class="tech">Three.js • Procedural Generation</p>
-                        <p>Build sprawling neon cities block by block in full 3D.</p>
-                        <a href="apps.html#city-builder" class="cta-button small">Launch Builder →</a>
-                    </div>
-                </div>
-
-                <!-- Project 3 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="img/system-breach.jpg" alt="System Breach" onerror="this.src='https://via.placeholder.com/400x250/0a0a0a/ff00aa?text=System+Breach';">
-                    </div>
-                    <div class="project-info">
-                        <h3>System Breach</h3>
-                        <p class="tech">Hacking Sim • Node Navigation</p>
-                        <p>Educational security simulation — bypass nodes in a cyber environment. (13+)</p>
-                        <a href="portfolio.html#system-breach" class="cta-button small">Infiltrate →</a>
-                    </div>
-                </div>
-
-                <!-- Project 4 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="img/3d-asteroid.jpg" alt="3D Asteroid Field" onerror="this.src='https://via.placeholder.com/400x250/0a0a0a/00ff9f?text=Asteroid+Field';">
-                    </div>
-                    <div class="project-info">
-                        <h3>3D Asteroid Field</h3>
-                        <p class="tech">Three.js • Space Shooter</p>
-                        <p>Dodge and destroy in this immersive 3D asteroid field.</p>
-                        <a href="apps.html#asteroid-field" class="cta-button small">Enter Space →</a>
-                    </div>
-                </div>
-
-                <!-- Add 2 more if space allows (e.g., Matrix Stream, Cyber Racer) -->
-            </div>
-            
-            <div class="text-center">
-                <a href="portfolio.html" class="cta-button">Explore Full Digital Arsenal →</a>
-            </div>
-        </section>
-
-        <!-- WHY CHOOSE US -->
-        <section class="content-section why-section">
-            <div class="page-header">
-                <h2>Why CyberSolutionsOhio?</h2>
-            </div>
-            <div class="why-grid">
-                <div class="why-card">
-                    <h3>Ohio Roots, Global Tech</h3>
-                    <p>Based in Cincinnati/Batavia — responsive, local support with enterprise capabilities.</p>
-                </div>
-                <div class="why-card">
-                    <h3>3D + Security Fusion</h3>
-                    <p>Unique blend of immersive interfaces and robust protection few others offer.</p>
-                </div>
-                <div class="why-card">
-                    <h3>Live Demos</h3>
-                    <p>Don't just read — play the projects yourself. Transparency by design.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- TRUST BAR (fixed duplication) -->
-        <section class="content-section trust-bar">
-            <div class="page-header">
-                <h2>Trusted By</h2>
-            </div>
-            <div class="trust-logos">
-                <!-- Replace placeholders with real optimized images -->
-                <img src="img/CIA_logo_(2021).svg.png" alt="CIA" class="trust-logo">
-                <img src="img/Federal-Bureau-of-Investigation-Logo-500x400.png" alt="FBI" class="trust-logo">
-                <img src="img/burger-king-logo.png" alt="Burger King" class="trust-logo">
-                <img src="img/visa-logo-png-transparent.png" alt="Visa" class="trust-logo">
-                <!-- Add more realistic clients later or remove joke ones for professionalism -->
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <!-- Your existing chatbot widget can stay here or move to a fixed position -->
-        <div class="chatbot-widget">...</div> <!-- keep your existing code -->
-
-        <div class="footer-content">
-            <p>&copy; 2026 CyberSolutionsOhio • Chris Heppard • Cincinnati, Ohio</p>
-            <button id="subscribeBtn" class="cta-button">Subscribe to Newsletter</button>
-            <ul class="social-links">
-                <li><a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a></li>
-                <li><a href="https://github.com/cyberchris-ai" target="_blank">GitHub</a></li>
-                <li><a href="https://x.com/yourhandle" target="_blank">X / Twitter</a></li>
-            </ul>
-        </div>
-    </footer>
-
-    <!-- Newsletter Modal (keep your existing) -->
-    <div id="newsletterModal" class="modal">...</div>
-
-    <script src="js/main.js"></script>
-    <script src="js/theme.js"></script>
-    <script src="js/chatbot.js"></script>
-    <script src="js/filter.js"></script>
-    <script src="js/modal.js"></script>
-    <!-- Optional: Add a small script for project filters if you expand them -->
-</body>
-</html>
