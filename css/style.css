@@ -38,3 +38,22 @@ header {
     background: var(--card-bg); border: 1px solid var(--cyan);
     padding: 25px; border-radius: 8px; transition: 0.3s;
 }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background: #1a1a1a; /* Match your dark theme */
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: #00d4ff; /* A bright, "cyber" blue */
+  font-weight: bold;
+}
