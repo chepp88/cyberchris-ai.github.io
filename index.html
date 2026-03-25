@@ -7,6 +7,35 @@
     <meta name="description" content="CyberSolutionsOhio, led by Chris Heppard, provides agile web development, cybersecurity, and cloud solutions for humans.">
     <link rel="stylesheet" href="css/style.css">
 </head>
+    <style>
+    /* Align the logo container */
+    .trust-logos {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 40px; /* Adjust spacing between logos here */
+        padding: 20px;
+    }
+
+    /* Ensure logos are a consistent size and don't overflow */
+    .trust-logo {
+        max-width: 150px;
+        max-height: 80px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        /* Optional: make them look uniform */
+        filter: grayscale(100%);
+        opacity: 0.7;
+        transition: all 0.3s ease;
+    }
+
+    .trust-logo:hover {
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+</style>
 <body>
     <header>
         <nav class="navbar">
