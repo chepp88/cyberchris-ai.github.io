@@ -31,7 +31,6 @@ function initThreeHero() {
 
     let theme = getColors();
 
-    // Create Nodes
     const nodeGeo = new THREE.SphereGeometry(0.3, 12, 12);
     for (let i = 0; i < 80; i++) {
         const mat = new THREE.MeshBasicMaterial({ 
@@ -44,7 +43,6 @@ function initThreeHero() {
         window.nodes.push(node);
     }
 
-    // Create Connections
     window.lineMaterial = new THREE.LineBasicMaterial({ 
         color: new THREE.Color(theme.cyan), 
         transparent: true, 
@@ -65,107 +63,79 @@ function initThreeHero() {
     function animate() {
         requestAnimationFrame(animate);
         const now = Date.now();
-
         window.nodes.forEach(n => {
             n.position.y += Math.sin(now * n.userData.speed) * 0.01;
             n.scale.setScalar(1 + Math.sin(now * 0.002 + n.userData.pulse) * 0.2);
         });
-
         window.connections.forEach(c => {
             const pos = c.line.geometry.attributes.position.array;
             pos[0] = c.start.position.x; pos[1] = c.start.position.y; pos[2] = c.start.position.z;
             pos[3] = c.end.position.x; pos[4] = c.end.position.y; pos[5] = c.end.position.z;
             c.line.geometry.attributes.position.needsUpdate = true;
         });
-
         camera.position.x += (mouse.x * 5 - camera.position.x) * 0.05;
         camera.position.y += (-(mouse.y * 5) - camera.position.y) * 0.05;
         camera.lookAt(0, 0, 0);
         renderer.render(scene, camera);
     }
     animate();
-
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
 }
 
-// 3. Theme Sync Helper
-function updateThreeJSColors() {
-    if (window.lineMaterial && window.nodes.length > 0) {
-        const style = getComputedStyle(document.body);
-        const newCyan = style.getPropertyValue('--cyan').trim();
-        const newMagenta = style.getPropertyValue('--magenta').trim();
-
-        window.lineMaterial.color.set(newCyan);
-        window.nodes.forEach((n, i) => {
-            n.material.color.set(i % 2 === 0 ? newCyan : newMagenta);
-        });
-    }
-}
-
-// 4. Initialize Everything on Load
+// 3. Global Initialization
 document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
     const toggleBtn = document.getElementById('theme-toggle-button');
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const featureItems = document.querySelectorAll('.feature-item');
 
-    // Load Theme Persistence
+    // Theme Persistence
     if(localStorage.getItem('theme') === 'light') body.classList.add('light-mode');
 
-    // Theme Toggle
+    // Theme Toggle Logic
     if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
             body.classList.toggle('light-mode');
             const isLight = body.classList.contains('light-mode');
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            updateThreeJSColors(); // Run 3D color sync
+            
+            // Sync 3D Colors
+            if (window.lineMaterial && window.nodes.length > 0) {
+                const style = getComputedStyle(document.body);
+                const cyan = style.getPropertyValue('--cyan').trim();
+                const magenta = style.getPropertyValue('--magenta').trim();
+                window.lineMaterial.color.set(cyan);
+                window.nodes.forEach((n, i) => n.material.color.set(i % 2 === 0 ? cyan : magenta));
+            }
         });
     }
 
-    // Category Filtering (with fade effect)
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const filter = btn.getAttribute('data-filter');
-            featureItems.forEach(item => {
-                const category = item.getAttribute('data-category');
-                item.style.transition = "opacity 0.3s ease, transform 0.3s ease";
-                
-                if (filter === 'all' || category === filter) {
-                    item.style.display = 'block';
-                    setTimeout(() => { item.style.opacity = '1'; item.style.transform = 'scale(1)'; }, 10);
-                } else {
-                    item.style.opacity = '0';
-                    item.style.transform = 'scale(0.95)';
-                    setTimeout(() => { item.style.display = 'none'; }, 300);
-                }
-            });
+    // View Mode Toggle (Grid/List)
+    const viewToggle = document.getElementById('view-mode-toggle');
+    const appsGrid = document.getElementById('apps-grid');
+    if (viewToggle && appsGrid) {
+        viewToggle.addEventListener('change', () => {
+            appsGrid.classList.toggle('list-view', viewToggle.checked);
+            const label = document.getElementById('view-mode-label');
+            if (label) label.innerText = viewToggle.checked ? 'List' : 'Grid';
         });
-    });
+    }
 
-    // Mouse tracker
+    // Mouse Tracking
     window.addEventListener('mousemove', (e) => {
         mouse.x = (e.clientX / window.innerWidth) - 0.5;
         mouse.y = (e.clientY / window.innerHeight) - 0.5;
     });
 
-    // Useless Fact logic (if element exists)
-    const factBtn = document.querySelector('[onclick="getNewFact()"]');
-    if (factBtn) {
-        window.getNewFact = async function() {
-            const factText = document.getElementById('useless-fact');
-            if (!factText) return;
-            factText.innerText = "Querying the void...";
-            try {
-                const res = await fetch('https://uselessfacts.jsph.pl/random.json?language=en');
-                const data = await res.json();
-                factText.innerText = data.text;
-            } catch (e) { factText.innerText = "The void is silent."; }
-        };
-        getNewFact();
+    // Start 3D if on correct page
+    if (typeof THREE !== 'undefined') initThreeHero();
+});
+
+// 4. Fact Box Logic
+window.getNewFact = async function() {
+    const factText = document.getElementById('useless-fact');
+    if (!factText) return;
+    factText.innerText = "Querying the void...";
+    try {
+        const res = await fetch('https://uselessfacts.jsph.pl/random.json?language=en');
+        const data = await res.json();
+        factText.innerText = data.text;
+    } catch (e) { factText.innerText = "The void is silent."; }
+};
