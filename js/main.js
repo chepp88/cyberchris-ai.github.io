@@ -1,85 +1,84 @@
-// 1. Facts Logic (Global Scope)
-const localFacts = [
-    "A single cloud can weigh more than a million pounds.",
-    "Banging your head against a wall for one hour burns 150 calories.",
-    "The person who invented the Frisbee was cremated and made into a Frisbee.",
-    "A snail can sleep for three years.",
-    "The total weight of all the ants on Earth is about the same as all the humans.",
-    "The average person spends 6 months of their lifetime waiting on a red light to turn green.",
-    "Sloths can hold their breath longer than dolphins can.",
-    "Honey never spoils. You could eat 3,000-year-old honey.",
-    "Nintendo was founded in 1889, years before the first lightbulb was sold."
-];
+/**
+ * CyberSolutionsOhio - Unified Frontend Logic
+ * Includes: Three.js Hero, Theme Switcher, and Category Filtering
+ */
 
-async function getNewFact() {
-    const factElement = document.getElementById('useless-fact');
-    if (!factElement) return;
+let scene, camera, renderer, nodeMaterial, lineMaterial, particleMaterial;
+let nodes = [];
+let connections = [];
+const mouse = { x: 0, y: 0 };
 
-    factElement.textContent = "Fetching a fresh fact...";
+// --- 1. Three.js Hero Background ---
+function initThreeHero() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
 
-    try {
-        const response = await fetch('https://uselessfacts.jsph.pl/api/v2/facts/random');
-        const data = await response.json();
-        factElement.textContent = data.text;
-    } catch (error) {
-        // Fallback to local facts if API fails
-        const randomLocal = localFacts[Math.floor(Math.random() * localFacts.length)];
-        factElement.textContent = randomLocal;
-        console.error("API Error, using local backup:", error);
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 40;
+
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const getColors = () => {
+        const style = getComputedStyle(document.body);
+        return {
+            cyan: new THREE.Color(style.getPropertyValue('--cyan').trim()),
+            magenta: new THREE.Color(style.getPropertyValue('--magenta').trim())
+        };
+    };
+
+    let theme = getColors();
+
+    // Nodes
+    const nodeGeo = new THREE.SphereGeometry(0.3, 12, 12);
+    for (let i = 0; i < 80; i++) {
+        const mat = new THREE.MeshBasicMaterial({ color: Math.random() > 0.5 ? theme.cyan : theme.magenta });
+        const node = new THREE.Mesh(nodeGeo, mat);
+        node.position.set((Math.random()-0.5)*80, (Math.random()-0.5)*45, (Math.random()-0.5)*20);
+        node.userData = { speed: 0.0005 + Math.random() * 0.001, pulse: Math.random() * Math.PI };
+        scene.add(node);
+        nodes.push(node);
     }
+
+    // Connections
+    lineMaterial = new THREE.LineBasicMaterial({ color: theme.cyan, transparent: true, opacity: 0.15 });
+    for (let i = 0; i < 45; i++) {
+        const start = nodes[Math.floor(Math.random() * nodes.length)];
+        const end = nodes[Math.floor(Math.random() * nodes.length)];
+        const geo = new THREE.BufferGeometry().setFromPoints([start.position, end.position]);
+        const line = new THREE.Line(geo, lineMaterial);
+        scene.add(line);
+        connections.push({ line, start, end });
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        const now = Date.now();
+
+        nodes.forEach(n => {
+            n.position.y += Math.sin(now * n.userData.speed) * 0.01;
+            n.scale.setScalar(1 + Math.sin(now * 0.002 + n.userData.pulse) * 0.2);
+        });
+
+        connections.forEach(c => {
+            const pos = c.line.geometry.attributes.position.array;
+            pos[0] = c.start.position.x; pos[1] = c.start.position.y; pos[2] = c.start.position.z;
+            pos[3] = c.end.position.x; pos[4] = c.end.position.y; pos[5] = c.end.position.z;
+            c.line.geometry.attributes.position.needsUpdate = true;
+        });
+
+        camera.position.x += (mouse.x * 5 - camera.position.x) * 0.05;
+        camera.position.y += (-(mouse.y * 5) - camera.position.y) * 0.05;
+        camera.lookAt(0, 0, 0);
+        renderer.render(scene, camera);
+    }
+    animate();
 }
 
-// 2. Theme Logic (Global Scope)
-window.changeTheme = function() {
-    const randomHue = Math.floor(Math.random() * 360);
-    const neonColor = `hsl(${randomHue}, 100%, 50%)`;
-    const glowColor = `hsl(${randomHue}, 100%, 30%)`;
-
-    document.documentElement.style.setProperty('--primary-color', neonColor);
-    document.documentElement.style.setProperty('--accent-color', glowColor);
-    
-    document.body.style.color = neonColor;
-    document.querySelectorAll('h1, h2, h3, a, button').forEach(el => {
-        el.style.color = neonColor;
-        el.style.borderColor = neonColor;
-        if(el.tagName === 'BUTTON') {
-            el.style.boxShadow = `0 0 15px ${neonColor}`;
-        }
-    });
-    console.log(`Theme changed to Hue: ${randomHue}`);
-};
-
-// 3. Page Initialization & Interaction Logic
+// --- 2. Theme & Filter Logic ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Load initial fact
-    getNewFact();
-
-    // Attach theme toggle if the button exists
-    const themeBtn = document.getElementById('theme-toggle-button');
-    if (themeBtn) {
-        themeBtn.addEventListener('click', window.changeTheme);
-    }
-
-    // Smooth scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) target.scrollIntoView({ behavior: 'smooth' });
-        });
-    });
-
-    // Scroll animations
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('section').forEach(section => {
-        section.classList.add('reveal');
-        observer.observe(section);
-    });
-});
+    const body = document.body;
+    const toggleBtn = document.getElementById('theme-toggle-button');
+    const filterBtns = document.querySelectorAll
