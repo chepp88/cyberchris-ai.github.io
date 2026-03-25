@@ -200,3 +200,15 @@ header {
     .profile-picture { margin: 0 auto; width: 200px; height: 200px; }
     .nav-links { display: none; } /* Add hamburger logic if needed */
 }
+.search-form input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--magenta);
+    color: var(--white);
+    padding: 8px 15px;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+}
+
+.search-form button {
+    border-radius: 0 4px 4px 0;
+}
