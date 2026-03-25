@@ -46,3 +46,23 @@ document.addEventListener('DOMContentLoaded', () => {
     filterAndDisplayApps();
     toggleViewMode();
 });
+/**
+ * View Mode Toggle (Grid vs List)
+ */
+const viewToggle = document.getElementById('view-mode-toggle');
+const viewLabel = document.getElementById('view-mode-label');
+const appsGrid = document.getElementById('apps-grid');
+
+if (viewToggle && appsGrid) {
+    viewToggle.addEventListener('change', () => {
+        if (viewToggle.checked) {
+            // Switch to List View
+            appsGrid.classList.add('list-view');
+            if (viewLabel) viewLabel.innerText = 'List';
+        } else {
+            // Switch to Grid View
+            appsGrid.classList.remove('list-view');
+            if (viewLabel) viewLabel.innerText = 'Grid';
+        }
+    });
+}
