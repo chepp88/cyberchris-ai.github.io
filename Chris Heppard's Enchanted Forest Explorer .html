@@ -1,6 +1,5 @@
-Chris Heppard's Enchanted Forest Explorer - Enhanced Edition
 
-<!DOCTYPE html>
+forest_explorer_html = '''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,57 +10,40 @@ Chris Heppard's Enchanted Forest Explorer - Enhanced Edition
         body { 
             background: #0a1f0a; 
             overflow: hidden; 
-            font-family: 'Segoe UI', 'Georgia', serif;
+            font-family: 'Georgia', serif;
             color: #90ee90;
-            user-select: none;
         }
         #gameCanvas {
             display: block;
-            cursor: crosshair;
         }
-
         #ui {
             position: absolute;
             top: 20px;
             left: 20px;
-            background: rgba(0,30,0,0.85);
-            background-image: linear-gradient(rgba(0,30,0,0.7), rgba(0,30,0,0.7)), url('https://images.unsplash.com/photos/a-close-up-of-a-green-mossy-surface-rkjb8iYjfjg?auto=format&fit=crop&q=80&w=200');
-            background-size: cover;
+            background: rgba(0,30,0,0.8);
             padding: 20px;
             border: 2px solid #228b22;
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(34,139,34,0.5);
-            pointer-events: none;
-            transition: background-image 2s;
-        }
-        #ui.night-mode {
-            background-image: linear-gradient(rgba(0,10,30,0.8), rgba(0,10,30,0.8)), url('https://images.unsplash.com/photos/fireflies-illuminate-a-dark-forest-at-night-T5WXfbEkGuo?auto=format&fit=crop&q=80&w=200');
-            border-color: #9370db;
         }
         .title {
-
-            font-size: 24px;
+            font-size: 28px;
             color: #ffd700;
-            text-shadow: 0 0 10px #ffd700;
+            text-shadow: 0 0 15px #ffd700;
             margin-bottom: 10px;
-            font-weight: bold;
         }
         .stat {
-            margin: 8px 0;
-            font-size: 14px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin: 5px 0;
+            font-size: 16px;
         }
         .magic-bar {
-            width: 150px;
-            height: 12px;
-            background: #111;
-            border: 1px solid #9370db;
-
-            border-radius: 6px;
+            width: 200px;
+            height: 20px;
+            background: #333;
+            border: 2px solid #9370db;
+            border-radius: 10px;
             overflow: hidden;
+            margin-top: 5px;
         }
         .magic-fill {
             height: 100%;
@@ -71,642 +53,553 @@ Chris Heppard's Enchanted Forest Explorer - Enhanced Edition
         }
         #inventory {
             position: absolute;
-            bottom: 30px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 12px;
-            background: rgba(0,20,0,0.9);
-            padding: 12px;
-            border-radius: 18px;
-
-            border: 2px solid #ffd700;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            gap: 10px;
+            background: rgba(0,30,0,0.9);
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #228b22;
         }
         .inv-slot {
-            width: 55px;
-            height: 55px;
+            width: 60px;
+            height: 60px;
             border: 2px solid #228b22;
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 30px;
             background: rgba(34,139,34,0.2);
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
+            transition: all 0.3s;
         }
-        .inv-slot:hover {
-            border-color: #90ee90;
-
-            background: rgba(34,139,34,0.4);
-        }
-        .inv-slot.selected {
-            background: rgba(255,215,0,0.2);
+        .inv-slot:hover, .inv-slot.active {
             border-color: #ffd700;
             box-shadow: 0 0 15px #ffd700;
-            transform: scale(1.1) translateY(-5px);
+            transform: scale(1.1);
         }
-        .slot-key {
-            position: absolute;
-            top: 2px;
-            left: 5px;
-            font-size: 10px;
-            color: #ffd700;
+        .inv-slot.selected {
+            background: rgba(255,215,0,0.3);
+            border-color: #ffd700;
         }
         #dialogue {
             position: absolute;
-            bottom: 140px;
+            bottom: 120px;
             left: 50%;
-
             transform: translateX(-50%);
-            background: rgba(0,10,0,0.95);
+            background: rgba(0,0,0,0.9);
             border: 2px solid #ffd700;
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 20px;
-            width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             display: none;
             text-align: center;
-            box-shadow: 0 0 40px rgba(0,0,0,1);
-            z-index: 100;
         }
         .speaker {
             color: #ffd700;
-            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-
+            margin-bottom: 10px;
         }
         #minimap {
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 180px;
-            height: 180px;
-            background: rgba(0,20,0,0.8);
-            border: 3px solid #228b22;
-            border-radius: 50%;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            width: 200px;
+            height: 200px;
+            background: rgba(0,30,0,0.8);
+            border: 2px solid #228b22;
+            border-radius: 10px;
         }
         #questLog {
             position: absolute;
-            top: 220px;
-            right: 20px;
+            top: 20px;
+            right: 240px;
             background: rgba(0,30,0,0.8);
             padding: 15px;
-            border: 1px solid #ffd700;
-
-            border-radius: 12px;
-            width: 180px;
-            font-size: 13px;
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            max-width: 250px;
         }
         .quest {
-            margin: 8px 0;
-            padding: 6px;
-            background: rgba(255,215,0,0.05);
-            border-left: 2px solid #ffd700;
-            border-radius: 3px;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255,215,0,0.1);
+            border-left: 3px solid #ffd700;
+            border-radius: 5px;
         }
         .quest.complete {
-            opacity: 0.4;
+            opacity: 0.5;
             text-decoration: line-through;
-            border-left-color: #228b22;
-        }
-        #damageFlash {
-            position: fixed;
-            top: 0;
-
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(255,0,0,0.3);
-            display: none;
-            pointer-events: none;
-            z-index: 999;
-        }
-        #saveIndicator {
-            position: absolute;
-            bottom: 100px;
-            right: 20px;
-            font-size: 12px;
-            color: #ffd700;
-            opacity: 0;
-            transition: opacity 0.5s;
         }
     </style>
 </head>
 <body>
-
-    <div id="damageFlash"></div>
-    <div id="saveIndicator">Saving Progress...</div>
     <canvas id="gameCanvas"></canvas>
-    
     <div id="ui">
-        <div class="title">🌲 Enchanted Forest</div>
-        <div class="stat">HP: <span id="health">❤️❤️❤️❤️❤️</span></div>
-        <div class="stat">MP: 
+        <div class="title">🌲 Chris Heppard's Forest</div>
+        <div class="stat">Health: <span id="health">❤️❤️❤️❤️❤️</span></div>
+        <div class="stat">Magic: 
             <div class="magic-bar">
                 <div class="magic-fill" id="magicBar"></div>
             </div>
         </div>
-        <div class="stat">LVL: <span id="level">1</span></div>
-        <div class="stat">XP: <span id="xp">0</span> / 100</div>
-        <div id="timeText" style="font-size:10px; margin-top:5px; opacity:0.7;">Time: Day</div>
+        <div class="stat">Level: <span id="level">1</span></div>
+        <div class="stat">XP: <span id="xp">0</span>/100</div>
     </div>
-
     <canvas id="minimap"></canvas>
-
-
     <div id="questLog">
-        <div style="color:#ffd700;font-weight:bold;margin-bottom:8px;text-align:center;">📜 QUESTS</div>
+        <div style="color:#ffd700;font-weight:bold;margin-bottom:10px;">📜 Quests</div>
         <div id="quests"></div>
     </div>
-
     <div id="inventory">
-        <div class="inv-slot selected" data-slot="0" onclick="selectSlot(0)">
-            <span class="slot-key">1</span>🗡️
-        </div>
-        <div class="inv-slot" data-slot="1" id="slot-stew" onclick="selectSlot(1)">
-            <span class="slot-key">2</span>🥣
-        </div>
-        <div class="inv-slot" data-slot="2" onclick="selectSlot(2)">
-            <span class="slot-key">3</span>✨
-        </div>
-        <div class="inv-slot" data-slot="3" onclick="selectSlot(3)">
-            <span class="slot-key">4</span>
-        </div>
-        <div class="inv-slot" data-slot="4" onclick="selectSlot(4)">
-
-            <span class="slot-key">5</span>
-        </div>
+        <div class="inv-slot selected" data-slot="0" onclick="selectSlot(0)">🗡️</div>
+        <div class="inv-slot" data-slot="1" onclick="selectSlot(1)"></div>
+        <div class="inv-slot" data-slot="2" onclick="selectSlot(2)"></div>
+        <div class="inv-slot" data-slot="3" onclick="selectSlot(3)"></div>
+        <div class="inv-slot" data-slot="4" onclick="selectSlot(4)"></div>
     </div>
-
     <div id="dialogue">
         <div class="speaker" id="speakerName">Forest Spirit</div>
         <div id="dialogueText">Welcome to the enchanted forest, traveler...</div>
-        <div style="margin-top:10px; font-size:12px; color:#aaa;">(Press Space to continue)</div>
     </div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
         const minimap = document.getElementById('minimap');
         const mmCtx = minimap.getContext('2d');
 
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            minimap.width = 180;
-            minimap.height = 180;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        // Game State
-        const worldSize = 3500;
-        let player = {
+        // Game state
+        const worldSize = 2000;
+        const player = {
             x: worldSize / 2,
             y: worldSize / 2,
-            size: 24,
-            speed: 4.5,
+            size: 20,
+            speed: 5,
             health: 5,
             maxHealth: 5,
             magic: 100,
             maxMagic: 100,
             level: 1,
             xp: 0,
-
-            selectedSlot: 0,
-            isAttacking: false,
-            attackTimer: 0,
-            stewCount: 3
+            direction: 0,
+            selectedSlot: 0
         };
 
-        // Load saved progress
-        const saved = localStorage.getItem('forestExplorerSave');
-        if(saved) {
-            const data = JSON.parse(saved);
-            player = {...player, ...data};
-        }
-
-        const world = {
-            trees: [],
-            flowers: [],
-            enemies: [],
-            npcs: [],
-            particles: [],
-
-            projectiles: [],
-            time: 0, // 0 to 2000 cycle
-            isNight: false
-        };
-
-        const quests = [
-            { id: 1, text: 'Visit the Elder Druid', complete: false },
-            { id: 2, text: 'Collect Moonflowers', complete: false, progress: 0, target: 3 },
-            { id: 3, text: 'Defeat Forest Dangers', complete: false, progress: 0, target: 5 }
+        const inventory = [
+            { type: 'sword', icon: '🗡️', damage: 2 },
+            null, null, null, null
         ];
 
-        // Generation
-        for(let i = 0; i < 250; i++) {
-            world.trees.push({
+        const quests = [
+            { id: 1, text: 'Find the Ancient Oak', complete: false },
+            { id: 2, text: 'Collect 5 Moonflowers', complete: false, progress: 0, target: 5 },
+            { id: 3, text: 'Defeat the Shadow Wolf', complete: false }
+        ];
+
+        // World objects
+        const trees = [];
+        const flowers = [];
+        const enemies = [];
+        const npcs = [];
+        const particles = [];
+
+        // Generate world
+        for(let i = 0; i < 150; i++) {
+            trees.push({
                 x: Math.random() * worldSize,
                 y: Math.random() * worldSize,
-                size: 40 + Math.random() * 80,
-                color: `hsl(${100 + Math.random() * 40}, 50%, ${20 + Math.random() * 10}%)`
+                size: 30 + Math.random() * 40,
+                type: Math.random() > 0.8 ? 'ancient' : 'normal'
             });
-
         }
 
-        for(let i = 0; i < 80; i++) {
-            world.flowers.push({
+        for(let i = 0; i < 50; i++) {
+            flowers.push({
                 x: Math.random() * worldSize,
                 y: Math.random() * worldSize,
-                type: Math.random() > 0.6 ? 'moonflower' : 'regular',
+                type: Math.random() > 0.7 ? 'moonflower' : 'normal',
                 collected: false
             });
         }
 
-        world.npcs.push({
-            x: worldSize / 2 + 150,
-            y: worldSize / 2 + 150,
-            name: 'Elder Druid',
-            icon: '🧙',
-            dialogue: [
-                "The shadow magic is strengthening...",
-                "Use your wand (Slot 3) to strike from a distance, but watch your Mana.",
-
-                "If you're hurt, eat your Forest Stew (Slot 2). I've given you a small supply.",
-                "The Ancient Oak lies to the North-West."
-            ],
-            dialogueIdx: 0
-        });
-
-        function spawnEnemy() {
-            const isGolem = Math.random() > 0.8;
-            world.enemies.push({
+        for(let i = 0; i < 15; i++) {
+            enemies.push({
                 x: Math.random() * worldSize,
                 y: Math.random() * worldSize,
-                type: isGolem ? 'golem' : (Math.random() > 0.5 ? 'wolf' : 'goblin'),
-                health: isGolem ? 10 : 3,
-                maxHealth: isGolem ? 10 : 3,
-                speed: isGolem ? 0.8 : (1.5 + Math.random()),
-                size: isGolem ? 40 : 25
+                type: Math.random() > 0.8 ? 'shadow_wolf' : 'goblin',
+                health: Math.random() > 0.8 ? 5 : 2,
+                maxHealth: Math.random() > 0.8 ? 5 : 2,
+                state: 'idle',
+                angle: 0
             });
         }
-        for(let i = 0; i < 25; i++) spawnEnemy();
 
+        npcs.push({
+            x: worldSize/2 + 200,
+            y: worldSize/2,
+            name: 'Elder Druid',
+            icon: '🧙',
+            dialogue: ['The forest whispers of dark magic...', 'Find the Ancient Oak to restore balance.']
+        });
 
         // Input
         const keys = {};
-        window.addEventListener('keydown', e => {
-            keys[e.key.toLowerCase()] = true;
-            if(e.key === ' ') handleInteraction();
+        document.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
             if(e.key >= '1' && e.key <= '5') selectSlot(parseInt(e.key) - 1);
         });
-        window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
-        
-        window.addEventListener('mousedown', e => {
-            if(player.selectedSlot === 0) player.isAttacking = true;
-            if(player.selectedSlot === 2 && player.magic >= 10) fireMagic();
-            if(player.selectedSlot === 1) useStew();
-        });
+        document.addEventListener('keyup', (e) => keys[e.key] = false);
 
         function selectSlot(slot) {
             player.selectedSlot = slot;
             document.querySelectorAll('.inv-slot').forEach((el, i) => {
                 el.classList.toggle('selected', i === slot);
-
             });
         }
 
-        function useStew() {
-            if(player.stewCount > 0 && player.health < player.maxHealth) {
-                player.stewCount--;
-                player.health = Math.min(player.maxHealth, player.health + 2);
-                document.getElementById('slot-stew').innerText = player.stewCount > 0 ? '🥣' : '';
-                updateUI();
-                saveGame();
-            }
-        }
-
-        function fireMagic() {
-            const camX = player.x - canvas.width / 2;
-            const camY = player.y - canvas.height / 2;
-            // Get mouse position relative to player
-            const angle = Math.atan2(mouseY + camY - player.y, mouseX + camX - player.x);
-            
-
-            world.projectiles.push({
-                x: player.x,
-                y: player.y,
-                vx: Math.cos(angle) * 10,
-                vy: Math.sin(angle) * 10,
-                life: 60
-            });
-            player.magic -= 10;
-            updateUI();
-        }
-
-        let mouseX = 0, mouseY = 0;
-        window.addEventListener('mousemove', e => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
-        function handleInteraction() {
-            const dialogueBox = document.getElementById('dialogue');
-
-            for(let npc of world.npcs) {
-                if(Math.hypot(player.x - npc.x, player.y - npc.y) < 80) {
-                    if(dialogueBox.style.display === 'block') {
-                        npc.dialogueIdx++;
-                        if(npc.dialogueIdx >= npc.dialogue.length) {
-                            dialogueBox.style.display = 'none';
-                            npc.dialogueIdx = 0;
-                            updateQuest(1);
-                        } else {
-                            document.getElementById('dialogueText').innerText = npc.dialogue[npc.dialogueIdx];
-                        }
-                    } else {
-                        document.getElementById('speakerName').innerText = npc.name;
-                        document.getElementById('dialogueText').innerText = npc.dialogue[0];
-                        dialogueBox.style.display = 'block';
-                    }
-                    return;
-                }
-            }
-
-
-            for(let flower of world.flowers) {
-                if(!flower.collected && flower.type === 'moonflower') {
-                    if(Math.hypot(player.x - flower.x, player.y - flower.y) < 50) {
-                        flower.collected = true;
-                        updateQuest(2);
-                        gainXP(20);
-                        break;
-                    }
-                }
-            }
-        }
-
-        function updateQuest(id) {
-            const quest = quests.find(q => q.id === id);
-            if(!quest || quest.complete) return;
-            if(quest.target) {
-                quest.progress++;
-                if(quest.progress >= quest.target) quest.complete = true;
-            } else {
-
-                quest.complete = true;
-            }
-            renderQuests();
-        }
-
-        function gainXP(amt) {
-            player.xp += amt;
-            if(player.xp >= 100) {
-                player.level++;
-                player.xp -= 100;
-                player.maxHealth++;
-                player.health = player.maxHealth;
-            }
-            updateUI();
-            saveGame();
-        }
-
-        function takeDamage() {
-            player.health--;
-
-            const flash = document.getElementById('damageFlash');
-            flash.style.display = 'block';
-            setTimeout(() => flash.style.display = 'none', 100);
-            if(player.health <= 0) {
-                alert("The forest has reclaimed you. Your progress has been reset.");
-                localStorage.removeItem('forestExplorerSave');
-                location.reload();
-            }
-            updateUI();
-        }
-
-        function saveGame() {
-            const data = {
-                level: player.level,
-                xp: player.xp,
-                health: player.health,
-                maxHealth: player.maxHealth,
-                stewCount: player.stewCount
-            };
-
-            localStorage.setItem('forestExplorerSave', JSON.stringify(data));
-            const indicator = document.getElementById('saveIndicator');
-            indicator.style.opacity = 1;
-            setTimeout(() => indicator.style.opacity = 0, 2000);
-        }
-
-        // Logic Loop
-        function update() {
-            // Time Cycle
-            world.time = (world.time + 1) % 4000;
-            const wasNight = world.isNight;
-            world.isNight = world.time > 2000;
-            
-            if(wasNight !== world.isNight) {
-                document.getElementById('ui').classList.toggle('night-mode', world.isNight);
-                document.getElementById('timeText').innerText = world.isNight ? 'Time: Night' : 'Time: Day';
-            }
-
-            // MP Regen
-
-            if(player.magic < player.maxMagic) player.magic += 0.1;
-
-            // Movement
+        function updatePlayer() {
             let dx = 0, dy = 0;
-            if(keys['w']) dy -= 1; if(keys['s']) dy += 1;
-            if(keys['a']) dx -= 1; if(keys['d']) dx += 1;
+            if(keys['w'] || keys['ArrowUp']) dy = -1;
+            if(keys['s'] || keys['ArrowDown']) dy = 1;
+            if(keys['a'] || keys['ArrowLeft']) dx = -1;
+            if(keys['d'] || keys['ArrowRight']) dx = 1;
 
             if(dx !== 0 || dy !== 0) {
-                const len = Math.hypot(dx, dy);
-                player.x = Math.max(0, Math.min(worldSize, player.x + (dx/len) * player.speed));
-                player.y = Math.max(0, Math.min(worldSize, player.y + (dy/len) * player.speed));
+                const len = Math.sqrt(dx*dx + dy*dy);
+                dx /= len; dy /= len;
+                player.x += dx * player.speed;
+                player.y += dy * player.speed;
+                player.direction = Math.atan2(dy, dx);
             }
 
-            // Projectiles
-            world.projectiles.forEach((p, pIdx) => {
+            // World bounds
+            player.x = Math.max(50, Math.min(worldSize - 50, player.x));
+            player.y = Math.max(50, Math.min(worldSize - 50, player.y));
+
+            // Magic regeneration
+            if(player.magic < player.maxMagic) player.magic += 0.1;
+
+            // Attack
+            if(keys[' '] && player.magic >= 10) {
+                castSpell();
+                player.magic -= 10;
+            }
+
+            // Collect flowers
+            flowers.forEach(f => {
+                if(!f.collected && Math.hypot(f.x - player.x, f.y - player.y) < 30) {
+                    f.collected = true;
+                    if(f.type === 'moonflower') {
+                        quests[1].progress++;
+                        if(quests[1].progress >= quests[1].target) quests[1].complete = true;
+                    }
+                    player.xp += 10;
+                    createParticles(f.x, f.y, '#ffd700', 10);
+                }
+            });
+
+            // Check level up
+            if(player.xp >= 100) {
+                player.level++;
+                player.xp = 0;
+                player.maxHealth++;
+                player.health = player.maxHealth;
+                createParticles(player.x, player.y, '#0f0', 20);
+            }
+
+            updateUI();
+        }
+
+        function castSpell() {
+            const spell = {
+                x: player.x,
+                y: player.y,
+                vx: Math.cos(player.direction) * 10,
+                vy: Math.sin(player.direction) * 10,
+                life: 30
+            };
+            
+            // Check enemy hits
+            enemies.forEach((enemy, i) => {
+                if(Math.hypot(enemy.x - player.x, enemy.y - player.y) < 100) {
+                    const angle = Math.atan2(enemy.y - player.y, enemy.x - player.x);
+                    if(Math.abs(angle - player.direction) < 0.5) {
+                        enemy.health -= inventory[player.selectedSlot]?.damage || 1;
+                        createParticles(enemy.x, enemy.y, '#f00', 5);
+                        if(enemy.health <= 0) {
+                            player.xp += enemy.type === 'shadow_wolf' ? 50 : 20;
+                            if(enemy.type === 'shadow_wolf') quests[2].complete = true;
+                            enemies.splice(i, 1);
+                            createParticles(enemy.x, enemy.y, '#f0f', 15);
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateEnemies() {
+            enemies.forEach(enemy => {
+                const dist = Math.hypot(enemy.x - player.x, enemy.y - player.y);
+                if(dist < 200) {
+                    enemy.state = 'chase';
+                    const angle = Math.atan2(player.y - enemy.y, player.x - enemy.x);
+                    enemy.x += Math.cos(angle) * 2;
+                    enemy.y += Math.sin(angle) * 2;
+                    
+                    if(dist < 30) {
+                        player.health -= 0.02;
+                        createParticles(player.x, player.y, '#f00', 2);
+                    }
+                } else {
+                    enemy.state = 'idle';
+                    enemy.angle += 0.02;
+                    enemy.x += Math.cos(enemy.angle) * 0.5;
+                    enemy.y += Math.sin(enemy.angle) * 0.5;
+                }
+            });
+        }
+
+        function createParticles(x, y, color, count) {
+            for(let i = 0; i < count; i++) {
+                particles.push({
+                    x, y,
+                    vx: (Math.random() - 0.5) * 5,
+                    vy: (Math.random() - 0.5) * 5,
+                    life: 30,
+                    color,
+                    size: Math.random() * 5 + 2
+                });
+            }
+        }
+
+        function updateParticles() {
+            particles.forEach((p, i) => {
                 p.x += p.vx;
                 p.y += p.vy;
                 p.life--;
-                
-
-                world.enemies.forEach(en => {
-                    if(Math.hypot(p.x - en.x, p.y - en.y) < en.size) {
-                        en.health -= 2;
-                        p.life = 0;
-                        if(en.health <= 0) { en.dead = true; gainXP(en.type === 'golem' ? 50 : 25); updateQuest(3); }
-                    }
-                });
+                if(p.life <= 0) particles.splice(i, 1);
             });
-            world.projectiles = world.projectiles.filter(p => p.life > 0);
-
-            // Melee Attack
-            if(player.isAttacking) {
-                player.attackTimer++;
-                if(player.attackTimer > 15) { player.isAttacking = false; player.attackTimer = 0; }
-                if(player.attackTimer === 1) {
-                    world.enemies.forEach(en => {
-                        if(Math.hypot(player.x - en.x, player.y - en.y) < 70) {
-                            en.health -= 2;
-                            if(en.health <= 0) { en.dead = true; gainXP(en.type === 'golem' ? 50 : 25); updateQuest(3); }
-
-                        }
-                    });
-                }
-            }
-
-            // Enemy AI
-            world.enemies = world.enemies.filter(e => !e.dead);
-            world.enemies.forEach(en => {
-                const dist = Math.hypot(player.x - en.x, player.y - en.y);
-                if(dist < 400) {
-                    const angle = Math.atan2(player.y - en.y, player.x - en.x);
-                    en.x += Math.cos(angle) * en.speed;
-                    en.y += Math.sin(angle) * en.speed;
-                    if(dist < 30 && Math.random() < 0.02) takeDamage();
-                }
-            });
-
-            if(world.enemies.length < 20) spawnEnemy();
         }
 
-
-        // Render Loop
         function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const camX = player.x - canvas.width / 2;
-            const camY = player.y - canvas.height / 2;
+            // Clear
+            ctx.fillStyle = '#0a1f0a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.save();
-            ctx.translate(-camX, -camY);
+            const camX = player.x - canvas.width/2;
+            const camY = player.y - canvas.height/2;
 
-            // Ground
-            ctx.fillStyle = world.isNight ? '#050a15' : '#0a1a0a';
-            ctx.fillRect(0, 0, worldSize, worldSize);
-            
-            // Grid
-            ctx.strokeStyle = world.isNight ? 'rgba(147, 112, 219, 0.05)' : 'rgba(34, 139, 34, 0.05)';
-            for(let i=0; i<worldSize; i+=200) {
-                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, worldSize); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(worldSize, i); ctx.stroke();
-            }
-
-
-            // Flowers
-            world.flowers.forEach(f => {
-                if(f.collected) return;
-                ctx.font = '20px serif';
-                if(f.type === 'moonflower') {
-                    ctx.shadowBlur = world.isNight ? 20 : 10; ctx.shadowColor = '#44f';
-                    ctx.fillText('🌸', f.x, f.y);
-                } else {
-                    ctx.fillText('🌿', f.x, f.y);
+            // Draw ground pattern
+            ctx.fillStyle = '#0d260d';
+            for(let x = Math.floor(camX/100)*100; x < camX + canvas.width; x += 100) {
+                for(let y = Math.floor(camY/100)*100; y < camY + canvas.height; y += 100) {
+                    if((x/100 + y/100) % 2 === 0) {
+                        ctx.fillRect(x - camX, y - camY, 100, 100);
+                    }
                 }
-                ctx.shadowBlur = 0;
-            });
-
-            // Projectiles
-            world.projectiles.forEach(p => {
-                ctx.fillStyle = '#0ff';
-                ctx.shadowBlur = 10; ctx.shadowColor = '#0ff';
-                ctx.beginPath(); ctx.arc(p.x, p.y, 5, 0, Math.PI*2); ctx.fill();
-                ctx.shadowBlur = 0;
-
-            });
-
-            // NPCs & Enemies
-            world.npcs.forEach(n => {
-                ctx.font = '40px serif';
-                ctx.fillText(n.icon, n.x - 20, n.y + 15);
-            });
-
-            world.enemies.forEach(en => {
-                ctx.font = `${en.size + 10}px serif`;
-                let icon = '👺';
-                if(en.type === 'wolf') icon = '🐺';
-                if(en.type === 'golem') icon = '🗿';
-                ctx.fillText(icon, en.x - en.size/2, en.y + en.size/2);
-            });
-
-            // Trees
-            world.trees.forEach(t => {
-                ctx.fillStyle = t.color;
-
-                ctx.beginPath(); ctx.moveTo(t.x, t.y - t.size);
-                ctx.lineTo(t.x - t.size/2, t.y); ctx.lineTo(t.x + t.size/2, t.y); ctx.fill();
-            });
-
-            // Player
-            ctx.font = '32px serif';
-            ctx.fillText('🧙‍♂️', player.x - 16, player.y + 10);
-            if(player.isAttacking) {
-                ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.arc(player.x, player.y, 60, 0, Math.PI*2); ctx.stroke();
             }
 
+            // Draw flowers
+            flowers.forEach(f => {
+                if(f.collected) return;
+                const screenX = f.x - camX;
+                const screenY = f.y - camY;
+                if(screenX < -50 || screenX > canvas.width + 50 || 
+                   screenY < -50 || screenY > canvas.height + 50) return;
+                
+                ctx.font = '20px Arial';
+                ctx.fillText(f.type === 'moonflower' ? '🌙' : '🌸', screenX - 10, screenY + 5);
+                
+                if(f.type === 'moonflower') {
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = '#ffd700';
+                    ctx.fillText('✨', screenX - 15, screenY - 10);
+                    ctx.shadowBlur = 0;
+                }
+            });
+
+            // Draw trees
+            trees.forEach(t => {
+                const screenX = t.x - camX;
+                const screenY = t.y - camY;
+                if(screenX < -100 || screenX > canvas.width + 100 || 
+                   screenY < -100 || screenY > canvas.height + 100) return;
+                
+                // Shadow
+                ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                ctx.beginPath();
+                ctx.ellipse(screenX, screenY + t.size/2, t.size/2, t.size/4, 0, 0, Math.PI*2);
+                ctx.fill();
+                
+                // Tree
+                ctx.fillStyle = t.type === 'ancient' ? '#4a0080' : '#228b22';
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, t.size/2, 0, Math.PI*2);
+                ctx.fill();
+                
+                if(t.type === 'ancient') {
+                    ctx.strokeStyle = '#ffd700';
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                }
+            });
+
+            // Draw NPCs
+            npcs.forEach(npc => {
+                const screenX = npc.x - camX;
+                const screenY = npc.y - camY;
+                ctx.font = '40px Arial';
+                ctx.fillText(npc.icon, screenX - 20, screenY + 10);
+                
+                // Name tag
+                ctx.fillStyle = '#fff';
+                ctx.font = '14px Georgia';
+                ctx.textAlign = 'center';
+                ctx.fillText(npc.name, screenX, screenY - 30);
+            });
+
+            // Draw enemies
+            enemies.forEach(e => {
+                const screenX = e.x - camX;
+                const screenY = e.y - camY;
+                ctx.font = '30px Arial';
+                ctx.fillText(e.type === 'shadow_wolf' ? '🐺' : '👺', screenX - 15, screenY + 10);
+                
+                // Health bar
+                ctx.fillStyle = '#333';
+                ctx.fillRect(screenX - 15, screenY - 25, 30, 5);
+                ctx.fillStyle = '#f00';
+                ctx.fillRect(screenX - 15, screenY - 25, 30 * (e.health/e.maxHealth), 5);
+            });
+
+            // Draw player
+            const px = canvas.width/2;
+            const py = canvas.height/2;
+            
+            ctx.save();
+            ctx.translate(px, py);
+            ctx.rotate(player.direction);
+            
+            // Shadow
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.ellipse(0, 15, 15, 8, 0, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Body
+            ctx.fillStyle = '#4169e1';
+            ctx.beginPath();
+            ctx.arc(0, 0, 15, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Direction indicator
+            ctx.fillStyle = '#ffd700';
+            ctx.fillRect(10, -3, 10, 6);
+            
             ctx.restore();
 
-            // Night Overlay
-            if(world.time > 1800 && world.time < 2200) {
-                const alpha = (world.time < 2000) ? (world.time-1800)/200 : (2200-world.time)/200;
-                ctx.fillStyle = `rgba(0, 10, 50, ${alpha * 0.4})`;
-                ctx.fillRect(0,0,canvas.width, canvas.height);
+            // Draw particles
+            particles.forEach(p => {
+                const screenX = p.x - camX;
+                const screenY = p.y - camY;
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life / 30;
+                ctx.fillRect(screenX, screenY, p.size, p.size);
+            });
+            ctx.globalAlpha = 1;
 
-            } else if (world.isNight) {
-                ctx.fillStyle = `rgba(0, 10, 50, 0.3)`;
-                ctx.fillRect(0,0,canvas.width, canvas.height);
+            // Draw spell effect
+            if(keys[' ']) {
+                ctx.strokeStyle = '#9370db';
+                ctx.lineWidth = 3;
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#9370db';
+                ctx.beginPath();
+                ctx.arc(px, py, 50, player.direction - 0.5, player.direction + 0.5);
+                ctx.stroke();
+                ctx.shadowBlur = 0;
             }
 
+            // Draw minimap
             drawMinimap();
-            requestAnimationFrame(() => { update(); draw(); });
         }
 
         function drawMinimap() {
-            mmCtx.clearRect(0, 0, 180, 180);
-            mmCtx.fillStyle = 'rgba(0,20,0,0.6)'; mmCtx.fillRect(0,0,180,180);
-            const scale = 180 / worldSize;
-            mmCtx.fillStyle = '#ffd700'; mmCtx.beginPath();
-            mmCtx.arc(player.x * scale, player.y * scale, 3, 0, Math.PI*2); mmCtx.fill();
-            mmCtx.fillStyle = '#ff4444';
-            world.enemies.forEach(e => mmCtx.fillRect(e.x * scale, e.y * scale, 2, 2));
+            mmCtx.fillStyle = '#0a1f0a';
+            mmCtx.fillRect(0, 0, 200, 200);
+            
+            const scale = 200 / worldSize;
+            
+            // Trees
+            mmCtx.fillStyle = '#228b22';
+            trees.forEach(t => {
+                mmCtx.fillRect(t.x * scale - 2, t.y * scale - 2, 4, 4);
+            });
+            
+            // Player
+            mmCtx.fillStyle = '#ffd700';
+            mmCtx.beginPath();
+            mmCtx.arc(player.x * scale, player.y * scale, 5, 0, Math.PI*2);
+            mmCtx.fill();
         }
-
 
         function updateUI() {
-            document.getElementById('health').innerText = '❤️'.repeat(player.health);
-            document.getElementById('level').innerText = player.level;
-            document.getElementById('xp').innerText = Math.floor(player.xp);
-            document.getElementById('magicBar').style.width = `${(player.magic / player.maxMagic) * 100}%`;
-            const stewBtn = document.getElementById('slot-stew');
-            stewBtn.innerHTML = `<span class="slot-key">2</span>${player.stewCount > 0 ? '🥣' : ''}`;
-        }
-
-        function renderQuests() {
-            const container = document.getElementById('quests');
-            container.innerHTML = quests.map(q => `
+            document.getElementById('health').textContent = '❤️'.repeat(Math.ceil(player.health));
+            document.getElementById('magicBar').style.width = (player.magic/player.maxMagic*100) + '%';
+            document.getElementById('level').textContent = player.level;
+            document.getElementById('xp').textContent = Math.floor(player.xp);
+            
+            document.getElementById('quests').innerHTML = quests.map(q => `
                 <div class="quest ${q.complete ? 'complete' : ''}">
-                    ${q.text} ${q.target ? `(${q.progress}/${q.target})` : ''}
+                    ${q.text} ${q.progress !== undefined ? `(${q.progress}/${q.target})` : ''}
                 </div>
             `).join('');
+
+            // Check dialogue
+            let nearNPC = false;
+            npcs.forEach(npc => {
+                if(Math.hypot(npc.x - player.x, npc.y - player.y) < 50) {
+                    nearNPC = true;
+                    document.getElementById('dialogue').style.display = 'block';
+                    document.getElementById('speakerName').textContent = npc.name;
+                }
+            });
+            if(!nearNPC) document.getElementById('dialogue').style.display = 'none';
+
+            if(player.health <= 0) {
+                player.x = worldSize/2;
+                player.y = worldSize/2;
+                player.health = player.maxHealth;
+                player.xp = Math.max(0, player.xp - 50);
+            }
         }
 
-        updateUI(); renderQuests(); draw();
+        function gameLoop() {
+            updatePlayer();
+            updateEnemies();
+            updateParticles();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
 
+        gameLoop();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
     </script>
 </body>
-</html>
+</html>'''
 
-
+with open('/mnt/kimi/output/chris_heppard_forest_explorer.html', 'w') as f:
+    f.write(forest_explorer_html)
+    
+print("✅ Chris Heppard's Enchanted Forest Explorer created!")
