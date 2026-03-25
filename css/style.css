@@ -1,195 +1,40 @@
-/* =============================================
-   1. VARIABLES & THEMES
-   ============================================= */
 :root {
     --bg-color: #0d0221;
     --card-bg: rgba(255, 255, 255, 0.05);
     --text-color: #ccd6f6;
-    --header-bg: rgba(13, 2, 33, 0.8);
-    --white: #e6f1ff;
     --cyan: #00f5d4;
     --magenta: #ff00f5;
     --grid-color: rgba(0, 245, 212, 0.2);
-    --font-sans: 'Inter', sans-serif;
-    --font-mono: 'SF Mono', 'Fira Code', monospace;
-    --grid-size: 50px;
-    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body.light-mode {
     --bg-color: #ffffff;
-    --card-bg: rgba(0, 0, 0, 0.05);
     --text-color: #1a1a1a;
-    --header-bg: rgba(255, 255, 255, 0.9);
-    --white: #000000;
-    --cyan: #ff4500; /* Solar Orange */
+    --cyan: #ff4500; 
     --magenta: #cc3700; 
     --grid-color: rgba(255, 69, 0, 0.1);
 }
 
-/* =============================================
-   2. GLOBAL STYLES & PERSPECTIVE GRID
-   ============================================= */
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-family: var(--font-sans);
-    margin: 0; padding: 0;
-    line-height: 1.5;
-    overflow-x: hidden;
-    transition: background 0.3s ease, color 0.3s ease;
+    margin: 0; transition: background 0.3s;
 }
 
-body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-image:
-        linear-gradient(var(--grid-color) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-    background-size: var(--grid-size) var(--grid-size);
-    z-index: -2;
-    transform: perspective(600px) rotateX(45deg);
-    transform-origin: center top;
-    animation: grid-scroll 20s linear infinite;
-}
-
-@keyframes grid-scroll {
-    from { background-position: 0 0; }
-    to { background-position: 0 var(--grid-size); }
-}
-
-/* =============================================
-   3. NAVIGATION
-   ============================================= */
 header {
-    background-color: var(--header-bg);
-    backdrop-filter: blur(12px);
-    padding: 10px 5%;
-    position: fixed;
-    top: 0; width: 100%;
-    z-index: 1000;
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    background: rgba(13, 2, 33, 0.8); backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--cyan);
-    box-shadow: 0 0 15px var(--cyan);
-    box-sizing: border-box;
 }
 
-nav, .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
-}
+.dashboard-main { display: flex; margin-top: 100px; padding: 20px 5%; gap: 30px; }
 
-.logo {
-    color: var(--cyan);
-    font-family: var(--font-mono);
-    font-size: 1.4rem;
-    font-weight: bold;
-    text-decoration: none;
-    text-shadow: 0 0 10px var(--cyan);
-    transition: var(--transition);
-}
-
-.logo:hover {
-    text-shadow: 0 0 20px var(--cyan), 0 0 30px var(--magenta);
-}
-
-header ul, .nav-links {
-    display: flex;
-    list-style: none;
-    gap: 20px;
-    margin: 0; padding: 0;
-}
-
-header ul a, .nav-links a {
-    color: var(--text-color);
-    text-decoration: none;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    transition: color 0.3s;
-}
-
-header ul a:hover { color: var(--cyan); }
-
-/* =============================================
-   4. APPS GRID & VIEW MODES
-   ============================================= */
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    transition: all 0.3s ease;
-}
-
-/* List View Style Override */
-.features-grid.list-view {
-    grid-template-columns: 1fr;
-}
-
-.features-grid.list-view .feature-item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px 30px;
-}
-
-.features-grid.list-view .feature-item h3 {
-    margin: 0;
-    flex: 1;
-}
-
-.features-grid.list-view .feature-item p {
-    margin: 0;
-    flex: 2;
-    text-align: right;
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
+/* Grid vs List View */
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.features-grid.list-view { grid-template-columns: 1fr; }
+.features-grid.list-view .feature-item { display: flex; justify-content: space-between; padding: 15px 30px; }
 
 .feature-item {
-    background: var(--card-bg);
-    border: 1px solid var(--cyan);
-    padding: 25px;
-    border-radius: 8px;
-    color: var(--text-color);
-    text-decoration: none;
-    transition: var(--transition);
-}
-
-.feature-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px var(--cyan);
-}
-
-/* =============================================
-   5. DASHBOARD LAYOUT
-   ============================================= */
-.dashboard-main {
-    display: flex;
-    margin-top: 100px;
-    padding: 40px 5%;
-    gap: 40px;
-}
-
-.sidebar {
-    width: 280px;
-    flex-shrink: 0;
-    background: var(--card-bg);
-    border: 1px solid var(--cyan);
-    padding: 25px;
-    border-radius: 8px;
-    height: fit-content;
-    position: sticky;
-    top: 100px;
-}
-
-/* The Toggle Switch Wrapper */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 20px;
+    background: var(--card-bg); border: 1px solid var(--cyan);
+    padding: 25px; border-radius: 8px; transition: 0.3s;
 }
