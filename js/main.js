@@ -1,74 +1,84 @@
 /**
- * js/main.js - Unified CyberSolutions Engine
- * Features: Infinite Theme Randomizer & Portfolio Filtering
+ * CyberSolutionsOhio - Unified Frontend Logic
+ * Includes: Three.js Hero, Theme Switcher, and Category Filtering
  */
 
-// Global state for Three.js (if used in other scripts)
-window.nodes = [];
-window.lineMaterial = null;
+let scene, camera, renderer, nodeMaterial, lineMaterial, particleMaterial;
+let nodes = [];
+let connections = [];
+const mouse = { x: 0, y: 0 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    const root = document.documentElement;
-    const themeBtn = document.getElementById('theme-toggle-button');
+// --- 1. Three.js Hero Background ---
+function initThreeHero() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
 
-    // --- 1. INFINITE THEME ENGINE ---
-    
-    /**
-     * Applies a HSL-based theme to the entire site
-     * @param {number} hue - A value from 0 to 360
-     */
-    function applyTheme(hue) {
-        const primaryHue = hue;
-        const accentHue = (primaryHue + 130) % 360; // Offset for aesthetic contrast
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 40;
 
-        // Update CSS Variables defined in :root
-        root.style.setProperty('--main-hue', primaryHue);
-        root.style.setProperty('--accent-hue', accentHue);
-        
-        // Sync Three.js nodes colors if the 3D scene is active
-        if (window.nodes && window.nodes.length > 0) {
-            const cyan = `hsl(${primaryHue}, 100%, 48%)`;
-            const magenta = `hsl(${accentHue}, 100%, 50%)`;
-            
-            if (window.lineMaterial) window.lineMaterial.color.set(cyan);
-            window.nodes.forEach((n, i) => {
-                n.material.color.set(i % 2 === 0 ? cyan : magenta);
-            });
-        }
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const getColors = () => {
+        const style = getComputedStyle(document.body);
+        return {
+            cyan: new THREE.Color(style.getPropertyValue('--cyan').trim()),
+            magenta: new THREE.Color(style.getPropertyValue('--magenta').trim())
+        };
+    };
+
+    let theme = getColors();
+
+    // Nodes
+    const nodeGeo = new THREE.SphereGeometry(0.3, 12, 12);
+    for (let i = 0; i < 80; i++) {
+        const mat = new THREE.MeshBasicMaterial({ color: Math.random() > 0.5 ? theme.cyan : theme.magenta });
+        const node = new THREE.Mesh(nodeGeo, mat);
+        node.position.set((Math.random()-0.5)*80, (Math.random()-0.5)*45, (Math.random()-0.5)*20);
+        node.userData = { speed: 0.0005 + Math.random() * 0.001, pulse: Math.random() * Math.PI };
+        scene.add(node);
+        nodes.push(node);
     }
 
-    // Load user's saved theme from localStorage, or default to Cyber Cyan (170)
-    const savedHue = localStorage.getItem('userHue') || 170;
-    applyTheme(parseInt(savedHue));
+    // Connections
+    lineMaterial = new THREE.LineBasicMaterial({ color: theme.cyan, transparent: true, opacity: 0.15 });
+    for (let i = 0; i < 45; i++) {
+        const start = nodes[Math.floor(Math.random() * nodes.length)];
+        const end = nodes[Math.floor(Math.random() * nodes.length)];
+        const geo = new THREE.BufferGeometry().setFromPoints([start.position, end.position]);
+        const line = new THREE.Line(geo, lineMaterial);
+        scene.add(line);
+        connections.push({ line, start, end });
+    }
 
-    // Handle Theme Randomizer Click
-    if (themeBtn) {
-        themeBtn.addEventListener('click', () => {
-            const newHue = Math.floor(Math.random() * 360);
-            applyTheme(newHue);
-            localStorage.setItem('userHue', newHue);
+    function animate() {
+        requestAnimationFrame(animate);
+        const now = Date.now();
+
+        nodes.forEach(n => {
+            n.position.y += Math.sin(now * n.userData.speed) * 0.01;
+            n.scale.setScalar(1 + Math.sin(now * 0.002 + n.userData.pulse) * 0.2);
         });
+
+        connections.forEach(c => {
+            const pos = c.line.geometry.attributes.position.array;
+            pos[0] = c.start.position.x; pos[1] = c.start.position.y; pos[2] = c.start.position.z;
+            pos[3] = c.end.position.x; pos[4] = c.end.position.y; pos[5] = c.end.position.z;
+            c.line.geometry.attributes.position.needsUpdate = true;
+        });
+
+        camera.position.x += (mouse.x * 5 - camera.position.x) * 0.05;
+        camera.position.y += (-(mouse.y * 5) - camera.position.y) * 0.05;
+        camera.lookAt(0, 0, 0);
+        renderer.render(scene, camera);
     }
+    animate();
+}
 
-    // --- 2. CATEGORY FILTERING LOGIC ---
-    
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const features = document.querySelectorAll('.feature-item');
-
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const filter = btn.getAttribute('data-filter');
-            
-            // UI Feedback: Update active button state
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            // Show/Hide items based on category
-            features.forEach(item => {
-                const category = item.getAttribute('data-category');
-                if (filter === 'all' || category === filter) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+// --- 2. Theme & Filter Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    const body = document.body;
+    const toggleBtn = document.getElementById('theme-toggle-button');
+    const filterBtns = document.querySelectorAll
