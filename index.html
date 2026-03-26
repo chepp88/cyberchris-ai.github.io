@@ -1,240 +1,290 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>CyberSolutionsOhio | Home</title>
-    <meta name="description" content="Chris Heppard's CyberSolutionsOhio — Full-Stack Development, 3D Interactive Experiences, Cybersecurity, and Cloud Solutions based in Cincinnati, Ohio.">
+
+    <meta name="description" content="CyberSolutionsOhio, led by Chris Heppard, provides agile web development, cybersecurity, and cloud solutions for humans.">
+
     <link rel="stylesheet" href="css/style.css">
-    <!-- Add Font Awesome for icons if you want (optional) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
+
 <body>
-    <header>
-        <nav class="navbar">
-            <a href="index.html" class="logo">CyberSolutionsOhio</a>
-            
-            <form class="search-form" action="https://www.google.com/search" method="get" target="_blank">
-                <input type="text" name="q" placeholder="Search the web...">
-                <button type="submit">Search</button>
-            </form>
+<header>
 
-            <ul class="nav-links">
-                <li><a href="about.html">About</a></li>
-                <li><a href="services.html">Services</a></li>
-                <li><a href="portfolio.html">Portfolio</a></li>
-                <li><a href="apps.html">Apps & Demos</a></li>
-                <li><a href="arcade.html">Arcade</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="launchpad.html">Launchpad</a></li>
-            </ul>
+    <nav class="navbar">
 
-            <button id="theme-toggle-button" class="cta-button">🌗 Toggle Theme</button>
-        </nav>
-    </header>
+        <a href="index.html" class="logo">CyberSolutionsOhio</a>
+
+        
+
+        <form class="search-form" action="https://www.google.com/search" method="get" target="_blank">
+
+            <input type="text" name="q" placeholder="Search the web...">
+
+            <button type="submit">Search</button>
+
+        </form>
+
+
+        <ul class="nav-links">
+
+           
+
+
+            <li><a href="about.html">About</a></li>
+
+            <li><a href="services.html">Services</a></li>
+
+           
+
+            <li><a href="apps.html">Apps</a></li>
+
+            <li><a href="contact.html">Contact</a></li>
+
+            <li><a href="arcade.html">Arcade</a></li> 
+
+            <li><a href="portfolio.html">Portfolio</a></li>
+
+            <li><a href="launchpad.html">Other</a></li> 
+
+        </ul>
+
+
+        <button id="theme-toggle-button" class="cta-button">Change Theme</button>
+
+    </nav>
+
+</header>
 
     <main>
-        <!-- HERO SECTION - Expanded -->
-        <section class="hero hero-two-column">
-            <div class="hero-left">
-                <div class="profile-picture">
-                    <img src="img/profile.jpg" alt="Chris Heppard - Founder of CyberSolutionsOhio">
+
+        <section class="content-section">
+
+            <div class="content-card hero hero-two-column">
+
+                <div class="hero-left">
+
+                    <div class="profile-picture">
+
+                        <img src="img/profile.jpg" alt="A photo of Chris Heppard, the founder of CyberSolutionsOhio.">
+
+                    </div>
+
                 </div>
+
+                <div class="hero-right">
+
+                    <h1>CyberSolutions for a Modern Ohio</h1>
+
+                    <p>Chris Heppard is a visionary Full-Stack Developer and Security Specialist based in Cincinnati, Ohio. With a passion for immersive web technologies and robust cyber-infrastructure, Chris founded CyberSolutions to bridge the gap between interactive 3D design and enterprise-grade security. His work transforms complex data into accessible, secure digital experiences for the modern web.</p>
+
+                    <a href="apps.html" class="cta-button">View Software Suite</a>
+
+                </div>
+
             </div>
-            <div class="hero-right">
-                <h1>CyberSolutions for a Modern Ohio</h1>
-                <p class="lead">Chris Heppard builds immersive 3D experiences and enterprise-grade security solutions from Cincinnati, Ohio. Turning complex data into secure, interactive digital realities.</p>
-                
-                <div class="hero-ctas">
-                    <a href="apps.html" class="cta-button primary">Explore Software Suite</a>
-                    <a href="portfolio.html" class="cta-button secondary">View Digital Arsenal</a>
-                    <a href="contact.html" class="cta-button outline">Get In Touch</a>
-                </div>
-                
-                <div class="hero-stats">
-                    <div><strong>15+</strong> Interactive Projects</div>
-                    <div><strong>100%</strong> Ohio-Based</div>
-                    <div><strong>3D + Security</strong> Fusion</div>
-                </div>
-            </div>
+
         </section>
 
-        <!-- CORE OFFERINGS - Improved with filters & icons -->
+
         <section class="content-section features">
+
             <div class="page-header">
+
                 <h2>Core Offerings</h2>
-                <p>Agile development meets robust cybersecurity — built for humans in Ohio and beyond.</p>
+
             </div>
-            
+
             <div class="filter-buttons">
+
                 <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="web">Web & 3D</button>
+
+                <button class="filter-btn" data-filter="web">Web</button>
+
                 <button class="filter-btn" data-filter="security">Security</button>
-                <button class="filter-btn" data-filter="cloud">Cloud & DevOps</button>
+
+                <button class="filter-btn" data-filter="cloud">Cloud</button>
+
             </div>
 
             <div class="features-grid">
+
                 <article class="feature-item" data-category="web">
-                    <i class="fas fa-code fa-2x"></i>
+
                     <h3>Web Development</h3>
-                    <p>High-performance, responsive websites and immersive 3D interfaces using modern tech stacks.</p>
+
+                    <p>Building responsive, high-performance websites from the ground up.</p>
+
                 </article>
+
                 <article class="feature-item" data-category="security">
-                    <i class="fas fa-shield-alt fa-2x"></i>
+
                     <h3>Cybersecurity Audits</h3>
-                    <p>Thorough vulnerability assessments and mitigation strategies to protect your assets.</p>
+
+                    <p>Identifying and mitigating vulnerabilities to protect your digital assets.</p>
+
                 </article>
+
                 <article class="feature-item" data-category="cloud">
-                    <i class="fas fa-cloud fa-2x"></i>
+
                     <h3>Cloud Solutions</h3>
-                    <p>Scalable infrastructure on AWS, Azure, or custom setups with seamless integration.</p>
+
+                    <p>Leveraging cloud infrastructure for scalability and efficiency.</p>
+
                 </article>
+
                 <article class="feature-item" data-category="web">
-                    <i class="fas fa-paint-brush fa-2x"></i>
-                    <h3>UI/UX & 3D Design</h3>
-                    <p>Intuitive, engaging experiences — from flat UIs to full Three.js-powered 3D worlds.</p>
+
+                    <h3>UI/UX Design</h3>
+
+                    <p>Creating intuitive and engaging user experiences.</p>
+
                 </article>
+
                 <article class="feature-item" data-category="security">
-                    <i class="fas fa-bug fa-2x"></i>
+
                     <h3>Penetration Testing</h3>
-                    <p>Real-world attack simulations to uncover and fix weaknesses before adversaries do.</p>
+
+                    <p>Simulating real-world attacks to find security weaknesses.</p>
+
                 </article>
+
                 <article class="feature-item" data-category="cloud">
-                    <i class="fas fa-cogs fa-2x"></i>
+
                     <h3>DevOps & Automation</h3>
-                    <p>CI/CD pipelines, infrastructure as code, and automated security workflows.</p>
+
+                    <p>Streamlining development and deployment pipelines.</p>
+
                 </article>
+
             </div>
+
         </section>
 
-        <!-- FEATURED PROJECTS - New high-impact section -->
-        <section class="content-section featured-projects">
-            <div class="page-header">
-                <h2>Featured Projects</h2>
-                <p>Selected from my Digital Arsenal — live 3D demos, games, and security tools you can try right now.</p>
-            </div>
-            
-            <div class="projects-grid">
-                <!-- Project 1 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="img/neon-pong.jpg" alt="Neon Pong 3D" onerror="this.src='https://via.placeholder.com/400x250/0a0a0a/00ff9f?text=Neon+Pong';">
-                    </div>
-                    <div class="project-info">
-                        <h3>Neon Pong</h3>
-                        <p class="tech">Three.js • WebGL • Real-time Physics</p>
-                        <p>Glowing 3D table tennis with smooth controls and neon aesthetics.</p>
-                        <a href="arcade.html#neon-pong" class="cta-button small">Play Now →</a>
-                    </div>
-                </div>
 
-                <!-- Project 2 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="img/3d-city-builder.jpg" alt="3D City Builder" onerror="this.src='https://via.placeholder.com/400x250/0a0a0a/00ff9f?text=City+Builder';">
-                    </div>
-                    <div class="project-info">
-                        <h3>3D City Builder</h3>
-                        <p class="tech">Three.js • Procedural Generation</p>
-                        <p>Build sprawling neon cities block by block in full 3D.</p>
-                        <a href="apps.html#city-builder" class="cta-button small">Launch Builder →</a>
-                    </div>
-                </div>
-
-                <!-- Project 3 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="img/system-breach.jpg" alt="System Breach" onerror="this.src='https://via.placeholder.com/400x250/0a0a0a/ff00aa?text=System+Breach';">
-                    </div>
-                    <div class="project-info">
-                        <h3>System Breach</h3>
-                        <p class="tech">Hacking Sim • Node Navigation</p>
-                        <p>Educational security simulation — bypass nodes in a cyber environment. (13+)</p>
-                        <a href="portfolio.html#system-breach" class="cta-button small">Infiltrate →</a>
-                    </div>
-                </div>
-
-                <!-- Project 4 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="img/3d-asteroid.jpg" alt="3D Asteroid Field" onerror="this.src='https://via.placeholder.com/400x250/0a0a0a/00ff9f?text=Asteroid+Field';">
-                    </div>
-                    <div class="project-info">
-                        <h3>3D Asteroid Field</h3>
-                        <p class="tech">Three.js • Space Shooter</p>
-                        <p>Dodge and destroy in this immersive 3D asteroid field.</p>
-                        <a href="apps.html#asteroid-field" class="cta-button small">Enter Space →</a>
-                    </div>
-                </div>
-
-                <!-- Add 2 more if space allows (e.g., Matrix Stream, Cyber Racer) -->
-            </div>
-            
-            <div class="text-center">
-                <a href="portfolio.html" class="cta-button">Explore Full Digital Arsenal →</a>
-            </div>
-        </section>
-
-        <!-- WHY CHOOSE US -->
-        <section class="content-section why-section">
-            <div class="page-header">
-                <h2>Why CyberSolutionsOhio?</h2>
-            </div>
-            <div class="why-grid">
-                <div class="why-card">
-                    <h3>Ohio Roots, Global Tech</h3>
-                    <p>Based in Cincinnati/Batavia — responsive, local support with enterprise capabilities.</p>
-                </div>
-                <div class="why-card">
-                    <h3>3D + Security Fusion</h3>
-                    <p>Unique blend of immersive interfaces and robust protection few others offer.</p>
-                </div>
-                <div class="why-card">
-                    <h3>Live Demos</h3>
-                    <p>Don't just read — play the projects yourself. Transparency by design.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- TRUST BAR (fixed duplication) -->
         <section class="content-section trust-bar">
+
             <div class="page-header">
+
                 <h2>Trusted By</h2>
+
             </div>
-            <div class="trust-logos">
-                <!-- Replace placeholders with real optimized images -->
-                <img src="img/CIA_logo_(2021).svg.png" alt="CIA" class="trust-logo">
-                <img src="img/Federal-Bureau-of-Investigation-Logo-500x400.png" alt="FBI" class="trust-logo">
-                <img src="img/burger-king-logo.png" alt="Burger King" class="trust-logo">
-                <img src="img/visa-logo-png-transparent.png" alt="Visa" class="trust-logo">
-                <!-- Add more realistic clients later or remove joke ones for professionalism -->
-            </div>
+
+        <div class="content-card">
+    <h2>Trusted By</h2>
+    <div class="trust-logos">
+        <div class="logo-container">
+            <img src="img/CIA_logo_(2021).svg.png" alt="CIA Logo" class="trust-logo">
+        </div>
+
+        <div class="logo-container">
+            <img src="img/Federal-Bureau-of-Investigation-Logo-500x400.png" alt="FBI Logo" class="trust-logo">
+        </div>
+
+        <div class="logo-container">
+            <img src="img/burger-king-logo.png" alt="Burger King Logo" class="trust-logo">
+        </div>
+
+        <div class="logo-container">
+            <img src="img/visa-logo-png-transparent.png" alt="Visa Logo" class="trust-logo">
+        </div>
+    </div>
+</div>
+
         </section>
+
     </main>
 
+
     <footer>
-        <!-- Your existing chatbot widget can stay here or move to a fixed position -->
-        <div class="chatbot-widget">...</div> <!-- keep your existing code -->
+
+        <div class="chatbot-widget">
+
+            <div class="chat-icon" id="chatIcon">?</div>
+
+            <div class="chat-window" id="chatWindow">
+
+                <div class="chat-header">Chat with Us!</div>
+
+                <div class="chat-body" id="chatBody">
+
+                    <div class="chat-message bot">Hello! How can I help you today?</div>
+
+                </div>
+
+                <div class="chat-footer">
+
+                    <input type="text" id="chatInput" placeholder="Ask a question...">
+
+                    <button id="chatSendBtn">Send</button>
+
+                </div>
+
+            </div>
+
+        </div>
 
         <div class="footer-content">
-            <p>&copy; 2026 CyberSolutionsOhio • Chris Heppard • Cincinnati, Ohio</p>
+
+            <p>&copy; 2024 CyberSolutionsOhio Chris Heppard. All rights reserved.</p>
+
             <button id="subscribeBtn" class="cta-button">Subscribe to Newsletter</button>
+
             <ul class="social-links">
-                <li><a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a></li>
-                <li><a href="https://github.com/cyberchris-ai" target="_blank">GitHub</a></li>
-                <li><a href="https://x.com/yourhandle" target="_blank">X / Twitter</a></li>
+
+                <li><a href="#">LinkedIn</a></li>
+
+                <li><a href="#">Twitter</a></li>
+
+                <li><a href="#">GitHub</a></li>
+
             </ul>
+
         </div>
+
     </footer>
 
-    <!-- Newsletter Modal (keep your existing) -->
-    <div id="newsletterModal" class="modal">...</div>
+
+    <div id="newsletterModal" class="modal">
+
+        <div class="modal-content">
+
+            <span class="close-button">&times;</span>
+
+            <h2>Subscribe to Our Newsletter</h2>
+
+            <p>Stay up to date with the latest industry news and insights.</p>
+
+            <form class="newsletter-form">
+
+                <input type="email" placeholder="Enter your email" required>
+
+                <button type="submit" class="cta-button">Subscribe</button>
+
+            </form>
+
+        </div>
+
+    </div>
 
     <script src="js/main.js"></script>
+
     <script src="js/theme.js"></script>
+
     <script src="js/chatbot.js"></script>
+
     <script src="js/filter.js"></script>
+
     <script src="js/modal.js"></script>
-    <!-- Optional: Add a small script for project filters if you expand them -->
+
 </body>
+
 </html>
