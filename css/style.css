@@ -136,3 +136,73 @@ header {
     filter: brightness(1.2);
     transform: scale(1.05);
 }
+/* Header Container */
+.main-header {
+  background: #0a0a0a;
+  padding: 20px 5%;
+  border-bottom: 2px solid #00d4ff;
+}
+
+/* Branding & Search Row */
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  color: #00d4ff; /* Changed from purple to Cyber Blue */
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Search & Button Group */
+.controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.search-box {
+  display: flex;
+}
+
+.search-box input {
+  padding: 8px;
+  border: 1px solid #333;
+  background: #111;
+  color: white;
+  border-radius: 4px 0 0 4px;
+}
+
+.search-box button {
+  background: #00d4ff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+/* Navigation Menu */
+.main-nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  gap: 25px;
+  padding: 0;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #00d4ff;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.main-nav a:hover {
+  color: #fff;
+  text-shadow: 0 0 10px #00d4ff;
+}
