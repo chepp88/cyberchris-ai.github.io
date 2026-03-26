@@ -9,32 +9,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-<header class="main-header">
-  <div class="header-top">
-    <div class="logo">CyberSolutionsOhio</div>
-    <div class="controls">
-      <div class="search-box">
-        <input type="text" placeholder="Search the web...">
-        <button>Search</button>
-      </div>
-      <button id="theme-toggle">🌗 Toggle Theme</button>
-    </div>
-  </div>
-  
-  <nav class="main-nav">
-    <ul>
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#portfolio">Portfolio</a></li>
-      <li><a href="#apps">Apps & Demos</a></li>
-      <li><a href="#arcade">Arcade</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><a href="#launchpad">Launchpad</a></li>
-    </ul>
-  </nav>
-</header>
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">CyberSolutionsOhio</a>
+            
+            <form class="search-form" action="https://www.google.com/search" method="get" target="_blank">
+                <input type="text" name="q" placeholder="Search the web...">
+                <button type="submit">Search</button>
+            </form>
+
+            <ul class="nav-links">
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="apps.html">Apps & Demos</a></li>
+                <li><a href="arcade.html">Arcade</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="launchpad.html">Launchpad</a></li>
+            </ul>
+
+            <button id="theme-toggle-button" class="cta-button">🌗 Toggle Theme</button>
+        </nav>
+    </header>
 
     <main>
+        <!-- HERO with Three.js Animated Background -->
         <section class="hero hero-two-column">
             <canvas id="hero-canvas" class="hero-canvas"></canvas>
             
@@ -61,6 +60,7 @@
             </div>
         </section>
 
+        <!-- CORE OFFERINGS -->
         <section class="content-section features">
             <div class="page-header">
                 <h2>Core Offerings</h2>
@@ -107,6 +107,11 @@
                 </article>
             </div>
         </section>
+
+        <!-- FEATURED PROJECTS -->
+        <section class="content-section featured-projects">
+            <div class="page-header">
+</section>
     </main>
 
     <footer>
@@ -121,6 +126,7 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <script src="js/main.js"></script>
 </body>
 </html>
