@@ -1,69 +1,84 @@
-const cards = ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D', 'E', 'E', 'F', 'F', 'G', 'G', 'H', 'H'];
-let flippedCards = [];
-let matchedPairs = 0;
-let moves = 0;
-let time = 0;
-let timer;
+document.addEventListener('DOMContentLoaded', () => {
+    const gameGrid = document.querySelector('.game-grid');
+    const symbols = ['★', '♦', '♥', '♠', '♣', '♦', '♥', '♠', '♣', '★', '⚓', '⚡', '⚓', '⚡', '☯', '☯'];
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let lockBoard = false;
 
-function shuffle(array) {
-    return array.sort(() => Math.random() - 0.5);
-}
+    function shuffle(array) {
+        array.sort(() => Math.random() - 0.5);
+    }
 
-function initGame() {
-    const grid = document.querySelector('.memory-grid');
-    grid.innerHTML = '';
-    shuffle(cards).forEach(val => {
-        const card = document.createElement('div');
-        card.classList.add('card');
-        card.dataset.value = val;
-        card.innerText = '?';
-        card.addEventListener('click', flipCard);
-        grid.appendChild(card);
-    });
-}
+    function createBoard() {
+        shuffle(symbols);
+        gameGrid.innerHTML = ''; // Clear previous board
+        symbols.forEach(symbol => {
+            const card = document.createElement('div');
+            card.classList.add('memory-card');
+            card.dataset.symbol = symbol;
 
-function flipCard() {
-    if (flippedCards.length < 2 && !this.classList.contains('flipped')) {
-        if (moves === 0 && time === 0) startTimer();
-        this.classList.add('flipped');
-        this.innerText = this.dataset.value;
+            const frontFace = document.createElement('div');
+            frontFace.classList.add('front-face');
+            frontFace.textContent = symbol;
+
+            const backFace = document.createElement('div');
+            backFace.classList.add('back-face');
+            backFace.textContent = '?';
+
+            card.appendChild(frontFace);
+            card.appendChild(backFace);
+            gameGrid.appendChild(card);
+
+            card.addEventListener('click', flipCard);
+        });
+    }
+
+    function flipCard() {
+        if (lockBoard) return;
+        if (this === flippedCards[0]) return;
+
+        this.classList.add('flip');
+
+        if (flippedCards.length === 0) {
+            flippedCards.push(this);
+            return;
+        }
+
         flippedCards.push(this);
+        checkForMatch();
+    }
 
-        if (flippedCards.length === 2) {
-            moves++;
-            document.getElementById('moves').innerText = `Moves: ${moves}`;
-            checkMatch();
+    function checkForMatch() {
+        const [cardOne, cardTwo] = flippedCards;
+        const isMatch = cardOne.dataset.symbol === cardTwo.dataset.symbol;
+
+        isMatch ? disableCards() : unflipCards();
+    }
+
+    function disableCards() {
+        flippedCards.forEach(card => card.removeEventListener('click', flipCard));
+        matchedPairs++;
+        resetBoard();
+        if (matchedPairs === symbols.length / 2) {
+            setTimeout(() => {
+                alert('You won! Congratulations!');
+                // Reset game or show a final message
+            }, 500);
         }
     }
-}
 
-function checkMatch() {
-    const [c1, c2] = flippedCards;
-    if (c1.dataset.value === c2.dataset.value) {
-        matchedPairs++;
-        flippedCards = [];
-        if (matchedPairs === 8) endGame();
-    } else {
+    function unflipCards() {
+        lockBoard = true;
         setTimeout(() => {
-            c1.classList.remove('flipped');
-            c2.classList.remove('flipped');
-            c1.innerText = '?';
-            c2.innerText = '?';
-            flippedCards = [];
-        }, 1000);
+            flippedCards.forEach(card => card.classList.remove('flip'));
+            resetBoard();
+        }, 1200);
     }
-}
 
-function startTimer() {
-    timer = setInterval(() => {
-        time++;
-        document.getElementById('timer').innerText = `Time: ${time}`;
-    }, 1000);
-}
-
-function endGame() {
-    clearInterval(timer);
-    alert(`System Overridden! Moves: ${moves}, Time: ${time}s`);
-}
-
-initGame();
+    function resetBoard() {
+        [flippedCards, lockBoard] = [[], false];
+    }
+    
+    // Initial board creation
+    createBoard();
+});
