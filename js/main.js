@@ -1,18 +1,42 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const body = document.body;
+    const root = document.documentElement;
     const themeBtn = document.getElementById('theme-toggle-button');
 
-    // Theme Persistence
-    if (localStorage.getItem('theme') === 'light') body.classList.add('light-mode');
+    // --- 1. INFINITE THEME ENGINE ---
+    
+    function applyTheme(hue) {
+        const primaryHue = hue;
+        const accentHue = (primaryHue + 130) % 360; // Offset for contrast
+
+        root.style.setProperty('--main-hue', primaryHue);
+        root.style.setProperty('--accent-hue', accentHue);
+        
+        // Update Three.js nodes if they exist
+        if (window.nodes && window.nodes.length > 0) {
+            const cyan = `hsl(${primaryHue}, 100%, 48%)`;
+            const magenta = `hsl(${accentHue}, 100%, 50%)`;
+            
+            if(window.lineMaterial) window.lineMaterial.color.set(cyan);
+            window.nodes.forEach((n, i) => {
+                n.material.color.set(i % 2 === 0 ? cyan : magenta);
+            });
+        }
+    }
+
+    // Load saved theme or default
+    const savedHue = localStorage.getItem('userHue') || 170;
+    applyTheme(parseInt(savedHue));
 
     if (themeBtn) {
         themeBtn.addEventListener('click', () => {
-            body.classList.toggle('light-mode');
-            localStorage.setItem('theme', body.classList.contains('light-mode') ? 'light' : 'dark');
+            const newHue = Math.floor(Math.random() * 360);
+            applyTheme(newHue);
+            localStorage.setItem('userHue', newHue);
         });
     }
 
-    // Simple Filtering Logic for Core Offerings
+    // --- 2. FILTERING LOGIC ---
+    
     const filterBtns = document.querySelectorAll('.filter-btn');
     const features = document.querySelectorAll('.feature-item');
 
