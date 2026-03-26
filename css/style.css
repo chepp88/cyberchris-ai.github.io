@@ -1,27 +1,33 @@
 /* =============================================
-   1. VARIABLES & THEMES
+   1. VARIABLES & THEMES (The "Infinite" Engine)
    ============================================= */
 :root {
-    --bg-color: #0d0221;
-    --card-bg: rgba(255, 255, 255, 0.05);
+    /* Default: CyberSolutions Cyan (170) and Magenta (300) */
+    --main-hue: 170;
+    --accent-hue: 300;
+    
+    /* Dynamic UI Colors based on HSL */
+    --cyan: hsl(var(--main-hue), 100%, 48%);
+    --magenta: hsl(var(--accent-hue), 100%, 50%);
+    
+    /* Adaptive Backgrounds - Calculated based on the Hue */
+    --bg-color: hsl(var(--main-hue), 30%, 5%); 
+    --header-bg: hsla(var(--main-hue), 30%, 5%, 0.9);
+    --card-bg: hsla(var(--main-hue), 100%, 100%, 0.05);
     --text-color: #ccd6f6;
-    --white: #e6f1ff;
-    --cyan: #00f5d4;
-    --magenta: #ff00f5;
-    --grid-color: rgba(0, 245, 212, 0.2);
-    --header-bg: rgba(13, 2, 33, 0.9);
+    --white: #ffffff;
+    --grid-color: hsla(var(--main-hue), 100%, 48%, 0.15);
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Optional "Paper" Light Mode Override */
 body.light-mode {
-    --bg-color: #ffffff;
+    --bg-color: #f0f2f5;
     --card-bg: rgba(0, 0, 0, 0.05);
     --text-color: #1a1a1a;
     --white: #000000;
-    --cyan: #ff4500; 
-    --magenta: #cc3700; 
-    --grid-color: rgba(255, 69, 0, 0.1);
     --header-bg: rgba(255, 255, 255, 0.9);
+    --grid-color: rgba(0, 0, 0, 0.05);
 }
 
 /* =============================================
@@ -32,7 +38,7 @@ body {
     color: var(--text-color);
     margin: 0;
     font-family: 'Inter', sans-serif;
-    transition: background 0.3s, color 0.3s;
+    transition: background 0.5s ease, color 0.3s ease;
     overflow-x: hidden;
 }
 
@@ -48,53 +54,85 @@ header {
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+    box-shadow: 0 0 15px hsla(var(--main-hue), 100%, 48%, 0.3);
 }
 
 .nav-links {
     display: flex;
     list-style: none;
     gap: 1.5rem;
+    margin: 0;
 }
 
 .nav-links a {
     text-decoration: none;
     color: var(--cyan);
     font-weight: bold;
-    font-size: 0.9rem;
+    font-family: 'SF Mono', monospace;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.nav-links a:hover {
+    color: var(--white);
+    text-shadow: 0 0 8px var(--cyan);
 }
 
 /* =============================================
-   3. HERO & GRIDS
+   3. HERO & CONTENT
    ============================================= */
 .hero {
-    padding: 150px 5% 100px;
+    position: relative;
+    padding: 180px 5% 100px;
     display: flex;
     align-items: center;
     gap: 50px;
+    min-height: 60vh;
 }
 
 .hero-canvas {
     position: absolute;
     top: 0; left: 0; z-index: -1;
+    width: 100%; height: 100%;
 }
 
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
+    gap: 25px;
     padding: 40px 5%;
 }
 
 .feature-item {
     background: var(--card-bg);
     border: 1px solid var(--cyan);
-    padding: 30px;
-    border-radius: 8px;
+    padding: 35px;
+    border-radius: 12px;
     transition: var(--transition);
     text-align: center;
+    backdrop-filter: blur(4px);
 }
 
 .feature-item:hover {
     transform: translateY(-10px);
-    box-shadow: 0 0 20px var(--cyan);
+    box-shadow: 0 0 25px var(--cyan);
+    background: hsla(var(--main-hue), 100%, 100%, 0.08);
+}
+
+/* Buttons */
+.cta-button {
+    background: var(--cyan);
+    color: var(--bg-color) !important;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--cyan);
+    transition: var(--transition);
+}
+
+.cta-button:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
 }
